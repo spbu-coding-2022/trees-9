@@ -38,3 +38,5 @@ gradle-app.setting
 # MacOS
 *.DS_Store
 .AppleDouble
+# Ignore Gradle build output directory
+build
