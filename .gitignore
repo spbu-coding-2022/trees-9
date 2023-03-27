@@ -40,3 +40,5 @@ gradle-app.setting
 .AppleDouble
 # Ignore Gradle build output directory
 build
+# Ignore idea workflow files
+.idea/*
