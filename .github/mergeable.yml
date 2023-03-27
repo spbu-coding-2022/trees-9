@@ -10,3 +10,10 @@ mergeable:
       - do: approvals
         min:
           count: 1
+        required:
+          assignees: true
+        limit:
+          users:
+            - vacmannnn
+            - gladiuswq
+            - raf-nr
