@@ -10,8 +10,3 @@ mergeable:
       - do: approvals
         min:
           count: 1
-        limit:
-          users:
-            - vacmannnn
-            - gladiuswq
-            - raf-nr
