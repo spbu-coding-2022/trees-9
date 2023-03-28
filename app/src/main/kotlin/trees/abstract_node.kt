@@ -1,9 +1,8 @@
 package trees
 
 class Node<Key : Comparable<Key>, Value>(
-    val key: Key,
+    var key: Key,
     var value: Value,
-    var parent: Node<Key, Value>? = null,
     var left: Node<Key, Value>? = null,
     var right: Node<Key, Value>? = null
 

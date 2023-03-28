@@ -1,16 +1,17 @@
 package trees
 
-abstract class Tree<Key : Comparable<Key>, Value> {
-    private var rootNode: Node<Key, Value>? = null
-
+abstract class Tree<Key : Comparable<Key>, Value> (
+    protected var rootNode: Node<Key, Value>? = null
+) {
     abstract fun addNode()
 
     abstract fun removeNode()
-
-    fun find(value: Int) {
-        TODO("not implemented yet")
-//        if (this == null)
-//            return null
-//        if this.Key
+    fun find(value: Key): Node<Key, Value>? {
+        return rootNode?.let { trueFind(value, it) }
+    }
+    private fun trueFind(value: Key, node: Node<Key, Value>): Node<Key, Value>? = when {
+        (node > value) -> node.left?.let { trueFind(value, it) }
+        (node < value) -> node.right?.let { trueFind(value, it) }
+        else -> node
     }
 }
