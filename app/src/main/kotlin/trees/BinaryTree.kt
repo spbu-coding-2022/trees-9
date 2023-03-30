@@ -3,17 +3,20 @@ package trees
 import KVPairs
 import Node
 
-abstract class BinaryTree<K: Comparable<K>, V, T: KVPairs<K, V>, NODE_TYPE: Node<T, NODE_TYPE>> {
-    var root: NODE_TYPE? = null
+abstract class BinaryTree<K : Comparable<K>, V, T : KVPairs<K, V>, NODE_TYPE : Node<T, NODE_TYPE>> {
+    protected var root: NODE_TYPE? = null
 
     private fun recursive_find(node: NODE_TYPE, searchedNode: NODE_TYPE): NODE_TYPE? = when {
         node.keyValue > searchedNode.keyValue -> node.left?.let { recursive_find(it, searchedNode) }
         node.keyValue < searchedNode.keyValue -> node.right?.let { recursive_find(it, searchedNode) }
         else -> node
     }
+
     fun find(searchedNode: NODE_TYPE): Boolean {
         val a = root?.let { recursive_find(it, searchedNode) }
         return a != null
     }
-    abstract fun add(start_node: NODE_TYPE?, new_node: NODE_TYPE): NODE_TYPE
+
+    abstract fun add(node: NODE_TYPE)
+    abstract fun delete(node: NODE_TYPE)
 }
