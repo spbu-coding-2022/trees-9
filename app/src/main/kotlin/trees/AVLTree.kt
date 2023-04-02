@@ -1,6 +1,7 @@
 package trees
 
 import KVPairs
+import trees.nodes.AVLNode
 
 class AVLTree<K : Comparable<K>, V, KV : KVPairs<K, V>, NODE_TYPE : Node<KV, NODE_TYPE>> :
     AbstractBalanceTree<K, V, KV, NODE_TYPE>() {

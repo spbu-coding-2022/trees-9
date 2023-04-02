@@ -1,7 +1,7 @@
 package trees
 
 import KVPairs
-import Node
+import trees.nodes.AbstractNode
 
 abstract class BinaryTree<K : Comparable<K>, V, T : KVPairs<K, V>, NODE_TYPE : Node<T, NODE_TYPE>> {
     protected var root: NODE_TYPE? = null

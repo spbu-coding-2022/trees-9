@@ -1,7 +1,7 @@
 package trees
 
 import KVPairs
-import Node
+import trees.nodes.BSTNode
 
 class BinarySearchTree<K : Comparable<K>, V, KV : KVPairs<K, V>, NODE_TYPE : Node<KV, NODE_TYPE>> :
     BinaryTree<K, V, KV, NODE_TYPE>() {
