@@ -1,6 +1,6 @@
 package trees.nodes
 
-class RBNode<T: Comparable<T>, NODE_TYPE: RBNode<T, NODE_TYPE>>(override var keyValue: T): Node<T, NODE_TYPE>(){
+class RBNode<T : Comparable<T>, NODE_TYPE : RBNode<T, NODE_TYPE>>(override var keyValue: T) : Node<T, NODE_TYPE>() {
 
     var color = Color.RED
 
