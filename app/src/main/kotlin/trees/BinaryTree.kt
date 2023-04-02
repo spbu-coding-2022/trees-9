@@ -1,6 +1,5 @@
 package trees
 
-import KVPairs
 import trees.nodes.AbstractNode
 
 abstract class BinaryTree<K : Comparable<K>, V, T : KVPairs<K, V>, NODE_TYPE : Node<T, NODE_TYPE>> {

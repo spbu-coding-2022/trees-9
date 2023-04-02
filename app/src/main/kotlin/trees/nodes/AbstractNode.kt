@@ -5,3 +5,9 @@ abstract class Node<T: Comparable<T>, NODE_TYPE: Node<T, NODE_TYPE>> {
     var left: NODE_TYPE? = null
     var right: NODE_TYPE? = null
 }
+
+class KVPairs<K : Comparable<K>, V>(val key: K, val value: V?) : Comparable<KVPairs<K, V>> {
+    override fun compareTo(anotherPair: KVPairs<K, V>): Int {
+        return key.compareTo(anotherPair.key)
+    }
+}
