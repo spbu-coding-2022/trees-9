@@ -1,8 +1,8 @@
 package trees
 
-import trees.nodes.Node
+import trees.nodes.RBNode
 
-class RBTree<T : Comparable<T>, NODE_TYPE : Node<T, NODE_TYPE>> : AbstractBalanceTree<T, NODE_TYPE>() {
+class RBTree<T : Comparable<T>, NODE_TYPE : RBNode<T, NODE_TYPE>> : AbstractBalanceTree<T, NODE_TYPE>() {
     override fun balance() {
         TODO("Not yet implemented")
     }

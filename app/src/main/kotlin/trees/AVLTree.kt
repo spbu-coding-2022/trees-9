@@ -1,8 +1,8 @@
 package trees
 
-import trees.nodes.Node
+import trees.nodes.AVLNode
 
-class AVLTree<T : Comparable<T>, NODE_TYPE : Node<T, NODE_TYPE>> : AbstractBalanceTree<T, NODE_TYPE>() {
+class AVLTree<T : Comparable<T>, NODE_TYPE : AVLNode<T, NODE_TYPE>> : AbstractBalanceTree<T, NODE_TYPE>() {
     override fun balance() {
         TODO("Not yet implemented")
     }

@@ -1,8 +1,8 @@
 package trees
 
-import trees.nodes.Node
+import trees.nodes.BSTNode
 
-class BinarySearchTree<T : Comparable<T>, NODE_TYPE : Node<T, NODE_TYPE>> : BinaryTree<T, NODE_TYPE>() {
+class BinarySearchTree<T : Comparable<T>, NODE_TYPE : BSTNode<T, NODE_TYPE>> : BinaryTree<T, NODE_TYPE>() {
     override fun add(node: NODE_TYPE) {
         recursive_add(root, node)
     }
