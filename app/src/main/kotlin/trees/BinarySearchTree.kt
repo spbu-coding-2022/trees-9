@@ -1,10 +1,8 @@
 package trees
 
-import KVPairs
 import trees.nodes.BSTNode
 
-class BinarySearchTree<K : Comparable<K>, V, KV : KVPairs<K, V>, NODE_TYPE : Node<KV, NODE_TYPE>> :
-    BinaryTree<K, V, KV, NODE_TYPE>() {
+class BinarySearchTree<T: Comparable<T>, NODE_TYPE : Node<KV, NODE_TYPE>> : BinaryTree<T, NODE_TYPE>() {
     override fun add(node: NODE_TYPE) {
         recursive_add(root, node)
     }
@@ -14,9 +12,9 @@ class BinarySearchTree<K : Comparable<K>, V, KV : KVPairs<K, V>, NODE_TYPE : Nod
             root = node
             return node
         }
-        if (current == null)
+        if (current == null) {
             return node
-
+        }
         if (current.keyValue < node.keyValue) {
             current.right = recursive_add(current.right, node)
         } else {

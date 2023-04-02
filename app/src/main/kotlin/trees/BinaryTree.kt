@@ -2,7 +2,7 @@ package trees
 
 import trees.nodes.AbstractNode
 
-abstract class BinaryTree<K : Comparable<K>, V, T : KVPairs<K, V>, NODE_TYPE : Node<T, NODE_TYPE>> {
+abstract class BinaryTree<T: Comparable<T>, NODE_TYPE : Node<T, NODE_TYPE>> {
     protected var root: NODE_TYPE? = null
 
     private fun recursive_find(node: NODE_TYPE, searchedNode: NODE_TYPE): NODE_TYPE? = when {

@@ -1,4 +1,3 @@
-
 package trees.nodes
 abstract class Node<T: Comparable<T>, NODE_TYPE: Node<T, NODE_TYPE>> {
     abstract var keyValue: T
