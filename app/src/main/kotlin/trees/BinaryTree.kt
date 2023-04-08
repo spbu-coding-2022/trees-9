@@ -13,7 +13,7 @@ abstract class BinaryTree<T : Comparable<T>, NODE_TYPE : Node<T, NODE_TYPE>> {
 
     fun find(searchedNode: NODE_TYPE): Boolean {
         val a = root?.let { recursive_find(it, searchedNode) }
-        return a?.keyValue != searchedNode.keyValue
+        return a?.keyValue == searchedNode.keyValue
     }
 
     abstract fun add(node: NODE_TYPE)
