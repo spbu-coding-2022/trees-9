@@ -1,5 +1,5 @@
 package trees.nodes
 
-class AVLNode<T : Comparable<T>>(override var keyValue: T) : Node<T, AVLNode<T>>() {
+class AVLNode<K: Comparable<K>, V>(key: K, value: V) : Node<K, V, AVLNode<K, V>>(key, value) {
     var height: Int? = null
 }
