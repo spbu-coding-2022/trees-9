@@ -1,17 +1,18 @@
 package trees
 
+import trees.abstract_trees.BalanceTree
 import trees.nodes.RBNode
 
-class RBTree<T : Comparable<T>, NODE_TYPE : RBNode<T, NODE_TYPE>> : AbstractBalanceTree<T, NODE_TYPE>() {
+class RBTree<K : Comparable<K>, V> : BalanceTree<K, V, RBNode<K, V>>() {
+    override fun add(node: RBNode<K, V>) {
+        TODO("Not yet implemented")
+    }
+
+    override fun remove(node: RBNode<K, V>) {
+        TODO("Not yet implemented")
+    }
+
     override fun balance() {
-        TODO("Not yet implemented")
-    }
-
-    override fun add(node: NODE_TYPE) {
-        TODO("Not yet implemented")
-    }
-
-    override fun delete(node: NODE_TYPE) {
         TODO("Not yet implemented")
     }
 }

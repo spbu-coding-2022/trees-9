@@ -1,9 +1,6 @@
 package trees.nodes
-
-class RBNode<T : Comparable<T>, NODE_TYPE : RBNode<T, NODE_TYPE>>(override var keyValue: T) : Node<T, NODE_TYPE>() {
-
+class RBNode<K: Comparable<K>, V>(key: K, value: V) : Node<K, V, RBNode<K, V>>(key, value) {
     var color = Color.RED
-
     enum class Color {
         RED,
         BLACK
