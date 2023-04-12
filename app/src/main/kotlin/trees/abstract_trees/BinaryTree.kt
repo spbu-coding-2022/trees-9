@@ -5,13 +5,13 @@ import trees.nodes.Node
 abstract class BinaryTree<K: Comparable<K>, V, NODE_TYPE: Node<K, V, NODE_TYPE>> {
     protected var root: NODE_TYPE? = null
 
-    fun find(node: NODE_TYPE): NODE_TYPE? {
+    fun find(key: K): NODE_TYPE? {
         var current = root
-        while (current != null && node != current) {
+        while (current != null && key != current.key) {
             current = when {
-                current.key < node.key -> current.right
-                current.key > node.key -> current.left
-                else -> node
+                current.key < key -> current.right
+                current.key > key -> current.left
+                else -> current
             }
         }
         return current
