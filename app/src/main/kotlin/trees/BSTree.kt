@@ -5,22 +5,25 @@ import trees.nodes.BSNode
 
 class BSTree<K : Comparable<K>, V> : BinaryTree<K, V, BSNode<K, V>>() {
     override fun add(node: BSNode<K, V>) {
-        recursive_add(root, node)
-    }
-    private fun recursive_add(current: BSNode<K, V>?, node: BSNode<K, V>): BSNode<K, V> {
         if (root == null) {
             root = node
-            return node
+            return
         }
-        if (current == null) {
-            return node
+        var current = root
+        var parent = current
+        while (current != null) {
+            parent = current
+            current = when {
+                current.key < node.key -> current.right
+                current.key > node.key -> current.left
+                else -> throw IllegalArgumentException("Node with key ${node.key} is already in the tree")
+            }
         }
-        if (current.key < node.key) {
-            current.right = recursive_add(current.right, node)
+        if (parent!!.key < node.key) {
+            parent.right = node
         } else {
-            current.left = recursive_add(current.left, node)
+            parent.left = node
         }
-        return current
     }
 
     override fun remove(node: BSNode<K, V>) {
