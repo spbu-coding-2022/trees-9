@@ -5,34 +5,10 @@ import trees.nodes.AVLNode
 import kotlin.math.max
 
 class AVLTree<K: Comparable<K>, V> : BalanceTree<K, V, AVLNode<K, V>>() {
-    override fun balance(node: AVLNode<K, V>): AVLNode<K, V>? {
-        updateHeight(node)
-        when(getBalanceFactor(node)) {
-            -2 -> {
-                if (getBalanceFactor(node.left) == 1) {
-                    node.left = node.left.let {rotateLeft(it!!)}
-                    updateHeight(node.left)
-                }
-                val balancedNode = rotateRight(node)
-                updateHeight(balancedNode)
-                return balancedNode
-            }
-            2 -> {
-                if (getBalanceFactor(node.right) == -1) {
-                    node.right = node.right.let {rotateRight(it!!)}
-                    updateHeight(node.right)
-                }
-                val balancedNode = rotateLeft(node)
-                updateHeight(balancedNode)
-                return balancedNode
-            }
-        }
-        return node
-    }
 
     override fun add(node: AVLNode<K, V>) {
         root = recursive_add(root, node)
-        updateHeight(root!!)
+        updateHeight(root)
     }
 
     private fun recursive_add(current_node: AVLNode<K,V>?, node: AVLNode<K,V>): AVLNode<K,V>? {
@@ -66,6 +42,31 @@ class AVLTree<K: Comparable<K>, V> : BalanceTree<K, V, AVLNode<K, V>>() {
             current_node.right = recursive_remove(current_node.right, minRightSubtree)
         }
         return balance(current_node)
+    }
+
+    override fun balance(node: AVLNode<K, V>): AVLNode<K, V>? {
+        updateHeight(node)
+        when(getBalanceFactor(node)) {
+            -2 -> {
+                if (getBalanceFactor(node.left) == 1) {
+                    node.left = node.left.let {rotateLeft(it!!)}
+                    updateHeight(node.left)
+                }
+                val balancedNode = rotateRight(node)
+                updateHeight(balancedNode)
+                return balancedNode
+            }
+            2 -> {
+                if (getBalanceFactor(node.right) == -1) {
+                    node.right = node.right.let {rotateRight(it!!)}
+                    updateHeight(node.right)
+                }
+                val balancedNode = rotateLeft(node)
+                updateHeight(balancedNode)
+                return balancedNode
+            }
+        }
+        return node
     }
 
     private fun getHeight(node: AVLNode<K, V>?): Int {
