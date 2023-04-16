@@ -39,11 +39,9 @@ class AVLTree<K: Comparable<K>, V> : BalanceTree<K, V, AVLNode<K, V>>() {
         if (current_node == null) return node
         if (current_node.key < node.key) {
             current_node.right = recursive_add(current_node.right, node)
-            updateHeight(current_node)
         }
         if (current_node.key > node.key) {
             current_node.left = recursive_add(current_node.left, node)
-            updateHeight(current_node)
         }
         return balance(current_node)
     }
