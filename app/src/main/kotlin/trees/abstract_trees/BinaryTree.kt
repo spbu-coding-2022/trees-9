@@ -34,6 +34,14 @@ abstract class BinaryTree<K: Comparable<K>, V, NODE_TYPE: Node<K, V, NODE_TYPE>>
         recursivePrint("", root, false)
     }
 
+    protected fun getMinNode(node: NODE_TYPE): NODE_TYPE {
+        var minimal = node
+        while (true) {
+            minimal = minimal.left ?: break
+        }
+        return minimal
+    }
+
     abstract fun add(node: NODE_TYPE)
     abstract fun remove(node: NODE_TYPE)
 }
