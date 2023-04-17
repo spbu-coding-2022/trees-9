@@ -8,7 +8,7 @@ class RBTree<K : Comparable<K>, V> : BalanceTree<K, V, RBNode<K, V>>() {
         TODO("Not yet implemented")
     }
 
-    override fun remove(node: RBNode<K, V>) {
+    override fun remove(key: K) {
         TODO("Not yet implemented")
     }
 

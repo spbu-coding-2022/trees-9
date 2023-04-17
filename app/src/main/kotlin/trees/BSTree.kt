@@ -4,6 +4,20 @@ import trees.abstract_trees.BinaryTree
 import trees.nodes.BSNode
 
 class BSTree<K : Comparable<K>, V> : BinaryTree<K, V, BSNode<K, V>>() {
+    fun isBstOk(node: BSNode<K, V>? = root): Boolean {
+        if (node == null) {
+            return true
+        }
+        // `compare to` returns not null value
+        if (node.left != null && node.left!!.key > node.key) {
+            return false
+        }
+        if (node.right != null && node.right!!.key < node.key) {
+            return false
+        }
+        return !(!isBstOk(node.right) || !isBstOk(node.left))
+    }
+
     override fun add(node: BSNode<K, V>) {
         if (root == null) {
             root = node
@@ -26,15 +40,14 @@ class BSTree<K : Comparable<K>, V> : BinaryTree<K, V, BSNode<K, V>>() {
         }
     }
 
-    override fun remove(node: BSNode<K, V>) {
-        root?.let { recursive_delete(it, node) }
-    }
-
-    private fun recursive_delete(current: BSNode<K, V>, node: BSNode<K, V>) {
-        when {
-            node.key > current.key -> scan(node, current.right, current)
-            node.key < current.key -> scan(node, current.left, current)
-            else -> removeNode(current, null)
+    override fun remove(key: K) {
+        val node = find(key)
+        root?.let {
+            node?.let { itNode ->
+                if (itNode.key > it.key) scan(itNode, it.right, it)
+                if (itNode.key < it.key) scan(itNode, it.left, it)
+                else removeNode(it, null)
+            }
         }
     }
 
@@ -69,9 +82,11 @@ class BSTree<K : Comparable<K>, V> : BinaryTree<K, V, BSNode<K, V>>() {
             } else if (node == p.right) {
                 p.right = null
             }
-        } ?: throw IllegalStateException(
-            "Can not remove the root node without child nodes"
-        )
+        } ?: rootRemove()
+    }
+
+    private fun rootRemove() {
+        root = null
     }
 
     private fun removeTwoChildNode(node: BSNode<K, V>) {

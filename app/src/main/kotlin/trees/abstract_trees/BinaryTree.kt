@@ -2,7 +2,7 @@ package trees.abstract_trees
 
 import trees.nodes.Node
 
-abstract class BinaryTree<K: Comparable<K>, V, NODE_TYPE: Node<K, V, NODE_TYPE>> {
+abstract class BinaryTree<K : Comparable<K>, V, NODE_TYPE : Node<K, V, NODE_TYPE>> {
     protected var root: NODE_TYPE? = null
 
     fun find(key: K): NODE_TYPE? {
@@ -43,5 +43,5 @@ abstract class BinaryTree<K: Comparable<K>, V, NODE_TYPE: Node<K, V, NODE_TYPE>>
     }
 
     abstract fun add(node: NODE_TYPE)
-    abstract fun remove(node: NODE_TYPE)
+    abstract fun remove(key: K)
 }

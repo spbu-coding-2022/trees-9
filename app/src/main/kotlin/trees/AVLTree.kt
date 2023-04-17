@@ -4,49 +4,50 @@ import trees.abstract_trees.BalanceTree
 import trees.nodes.AVLNode
 import kotlin.math.max
 
-class AVLTree<K: Comparable<K>, V> : BalanceTree<K, V, AVLNode<K, V>>() {
+class AVLTree<K : Comparable<K>, V> : BalanceTree<K, V, AVLNode<K, V>>() {
 
     override fun add(node: AVLNode<K, V>) {
-        root = recursive_add(root, node)
+        root = recursiveAdd(root, node)
         updateHeight(root)
     }
 
-    private fun recursive_add(currentNode: AVLNode<K,V>?, node: AVLNode<K,V>): AVLNode<K,V> {
+    private fun recursiveAdd(currentNode: AVLNode<K, V>?, node: AVLNode<K, V>): AVLNode<K, V> {
         if (currentNode == null) return node
         if (currentNode.key < node.key) {
-            currentNode.right = recursive_add(currentNode.right, node)
+            currentNode.right = recursiveAdd(currentNode.right, node)
         }
         if (currentNode.key > node.key) {
-            currentNode.left = recursive_add(currentNode.left, node)
+            currentNode.left = recursiveAdd(currentNode.left, node)
         }
         return balance(currentNode)
     }
 
-    override fun remove(node: AVLNode<K, V>) {
-        root = recursive_remove(root, node)
+    override fun remove(key: K) {
+        val node = find(key)
+        root = node?.let { recursiveRemove(root, it) }
         updateHeight(root)
     }
 
-    private fun recursive_remove(currentNode: AVLNode<K, V>?, node: AVLNode<K, V>): AVLNode<K, V>? {
+    private fun recursiveRemove(currentNode: AVLNode<K, V>?, node: AVLNode<K, V>): AVLNode<K, V>? {
         if (currentNode == null) return null
         if (currentNode.key < node.key) {
-            currentNode.right = recursive_remove(currentNode.right, node)
+            currentNode.right = recursiveRemove(currentNode.right, node)
         } else if (currentNode.key > node.key) {
-            currentNode.left = recursive_remove(currentNode.left, node)
+            currentNode.left = recursiveRemove(currentNode.left, node)
         } else {
             if (currentNode.left == null || currentNode.right == null)
                 return currentNode.left ?: currentNode.right
             val minRightSubtree = getMinNode(currentNode.right!!)
             currentNode.key = minRightSubtree.key
             currentNode.value = minRightSubtree.value
-            currentNode.right = recursive_remove(currentNode.right, minRightSubtree)
+            currentNode.right = recursiveRemove(currentNode.right, minRightSubtree)
         }
         return balance(currentNode)
     }
 
     override fun balance(node: AVLNode<K, V>): AVLNode<K, V> {
         updateHeight(node)
-        when(getBalanceFactor(node)) {
+        when (getBalanceFactor(node)) {
             -2 -> {
                 if (getBalanceFactor(node.left) == 1) {
                     node.left = node.left?.let { rotateLeft(it) }
@@ -56,6 +57,7 @@ class AVLTree<K: Comparable<K>, V> : BalanceTree<K, V, AVLNode<K, V>>() {
                 updateHeight(balancedNode)
                 return balancedNode
             }
+
             2 -> {
                 if (getBalanceFactor(node.right) == -1) {
                     node.right = node.right?.let { rotateRight(it) }
@@ -79,11 +81,12 @@ class AVLTree<K: Comparable<K>, V> : BalanceTree<K, V, AVLNode<K, V>>() {
     }
 
     private fun updateHeight(node: AVLNode<K, V>?) {
-        node?.let {it.height = max(getHeight(it.left), getHeight(it.right)) + 1}
+        node?.let { it.height = max(getHeight(it.left), getHeight(it.right)) + 1 }
     }
 
     private fun rotateRight(node: AVLNode<K, V>): AVLNode<K, V> {
-        val leftChild = node.left ?: throw IllegalArgumentException("When turning right, the node must have a child on the right.")
+        val leftChild =
+            node.left ?: throw IllegalArgumentException("When turning right, the node must have a child on the right.")
         val rightGrandChild = leftChild.right
         leftChild.right = node
         node.left = rightGrandChild
@@ -92,7 +95,8 @@ class AVLTree<K: Comparable<K>, V> : BalanceTree<K, V, AVLNode<K, V>>() {
     }
 
     private fun rotateLeft(node: AVLNode<K, V>): AVLNode<K, V> {
-        val rightChild = node.right ?: throw IllegalArgumentException("When turning right, the node must have a child on the right.")
+        val rightChild =
+            node.right ?: throw IllegalArgumentException("When turning right, the node must have a child on the right.")
         val leftGrandChild = rightChild.left
         rightChild.left = node
         node.right = leftGrandChild
