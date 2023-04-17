@@ -4,7 +4,7 @@ import trees.abstract_trees.BalanceTree
 import trees.nodes.RBNode
 
 class RBTree<K : Comparable<K>, V> : BalanceTree<K, V, RBNode<K, V>>() {
-    override fun add(node: RBNode<K, V>) {
+    override fun add(key: K, value: V) {
         TODO("Not yet implemented")
     }
 
