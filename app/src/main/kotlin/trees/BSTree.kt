@@ -30,6 +30,9 @@ class BSTree<K : Comparable<K>, V> : BinaryTree<K, V, BSNode<K, V>>() {
         if (currentNode.key > node.key) {
             currentNode.left = recursiveAdd(currentNode.left, node)
         }
+        if (currentNode.key == node.key) {
+            return node
+        }
         return currentNode
     }
 

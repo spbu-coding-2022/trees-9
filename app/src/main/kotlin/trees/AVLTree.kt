@@ -19,6 +19,9 @@ class AVLTree<K : Comparable<K>, V> : BalanceTree<K, V, AVLNode<K, V>>() {
         if (currentNode.key > node.key) {
             currentNode.left = recursiveAdd(currentNode.left, node)
         }
+        if (currentNode.key == node.key) {
+            return node
+        }
         return balance(currentNode)
     }
 
