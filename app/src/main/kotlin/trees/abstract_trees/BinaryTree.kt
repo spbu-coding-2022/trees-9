@@ -4,7 +4,7 @@ import trees.nodes.Node
 import trees.nodes.RBNode
 
 abstract class BinaryTree<K : Comparable<K>, V, NODE_TYPE : Node<K, V, NODE_TYPE>> {
-    protected var root: NODE_TYPE? = null
+    internal var root: NODE_TYPE? = null
 
     fun find(key: K): NODE_TYPE? {
         var current = root
