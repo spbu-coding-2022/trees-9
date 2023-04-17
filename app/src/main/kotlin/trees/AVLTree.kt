@@ -11,15 +11,15 @@ class AVLTree<K: Comparable<K>, V> : BalanceTree<K, V, AVLNode<K, V>>() {
         updateHeight(root)
     }
 
-    private fun recursive_add(current_node: AVLNode<K,V>?, node: AVLNode<K,V>): AVLNode<K,V>? {
-        if (current_node == null) return node
-        if (current_node.key < node.key) {
-            current_node.right = recursive_add(current_node.right, node)
+    private fun recursive_add(currentNode: AVLNode<K,V>?, node: AVLNode<K,V>): AVLNode<K,V> {
+        if (currentNode == null) return node
+        if (currentNode.key < node.key) {
+            currentNode.right = recursive_add(currentNode.right, node)
         }
-        if (current_node.key > node.key) {
-            current_node.left = recursive_add(current_node.left, node)
+        if (currentNode.key > node.key) {
+            currentNode.left = recursive_add(currentNode.left, node)
         }
-        return balance(current_node)
+        return balance(currentNode)
     }
 
     override fun remove(node: AVLNode<K, V>) {
@@ -27,29 +27,29 @@ class AVLTree<K: Comparable<K>, V> : BalanceTree<K, V, AVLNode<K, V>>() {
         updateHeight(root)
     }
 
-    private fun recursive_remove(current_node: AVLNode<K, V>?, node: AVLNode<K, V>): AVLNode<K, V>? {
-        if (current_node == null) return null
-        if (current_node.key < node.key) {
-            current_node.right = recursive_remove(current_node.right, node)
-        } else if (current_node.key > node.key) {
-            current_node.left = recursive_remove(current_node.left, node)
+    private fun recursive_remove(currentNode: AVLNode<K, V>?, node: AVLNode<K, V>): AVLNode<K, V>? {
+        if (currentNode == null) return null
+        if (currentNode.key < node.key) {
+            currentNode.right = recursive_remove(currentNode.right, node)
+        } else if (currentNode.key > node.key) {
+            currentNode.left = recursive_remove(currentNode.left, node)
         } else {
-            if (current_node.left == null || current_node.right == null)
-                return current_node.left ?: current_node.right
-            val minRightSubtree = getMinNode(current_node.right!!)
-            current_node.key = minRightSubtree.key
-            current_node.value = minRightSubtree.value
-            current_node.right = recursive_remove(current_node.right, minRightSubtree)
+            if (currentNode.left == null || currentNode.right == null)
+                return currentNode.left ?: currentNode.right
+            val minRightSubtree = getMinNode(currentNode.right!!)
+            currentNode.key = minRightSubtree.key
+            currentNode.value = minRightSubtree.value
+            currentNode.right = recursive_remove(currentNode.right, minRightSubtree)
         }
-        return balance(current_node)
+        return balance(currentNode)
     }
 
-    override fun balance(node: AVLNode<K, V>): AVLNode<K, V>? {
+    override fun balance(node: AVLNode<K, V>): AVLNode<K, V> {
         updateHeight(node)
         when(getBalanceFactor(node)) {
             -2 -> {
                 if (getBalanceFactor(node.left) == 1) {
-                    node.left = node.left.let {rotateLeft(it!!)}
+                    node.left = node.left?.let { rotateLeft(it) }
                     updateHeight(node.left)
                 }
                 val balancedNode = rotateRight(node)
@@ -58,7 +58,7 @@ class AVLTree<K: Comparable<K>, V> : BalanceTree<K, V, AVLNode<K, V>>() {
             }
             2 -> {
                 if (getBalanceFactor(node.right) == -1) {
-                    node.right = node.right.let {rotateRight(it!!)}
+                    node.right = node.right?.let { rotateRight(it) }
                     updateHeight(node.right)
                 }
                 val balancedNode = rotateLeft(node)
