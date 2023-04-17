@@ -27,88 +27,109 @@ class RBTree<K : Comparable<K>, V> : BalanceTree<K, V, RBNode<K, V>>() {
         }
         node.parent = parent
 
-        balanceAfterInsert(node)
+        balance(node, false)
     }
 
-    override fun remove(node: RBNode<K, V>) {
+    override fun remove(key: K) {
         var current = root
-        while (current != null && current.key != node.key) {
-            current = if (node.key < current.key) {
+        while (current != null && current.key != key) {
+            current = if (key < current.key) {
                 current.left
             } else {
                 current.right
             }
         }
         if (current == null) {
-            throw IllegalStateException("There is no such node with key ${node.key} in tree")
+            throw IllegalStateException("There is no such node with key $key in tree")
         }
 
         val movedUpNode: RBNode<K, V>?
         val deletedNodeColor: Color
 
-        // Node has zero or one child
         if (current.left == null || current.right == null) {
-            movedUpNode = deleteNodeWithZeroOrOneChild(current)
+            movedUpNode = removeNodeWithZeroOrOneChild(current)
             deletedNodeColor = current.color
         } else {
-            // Find minimum node of right subtree ("inorder successor" of current node)
-            val inOrderSuccessor: RBNode<K, V> = findMinimum(current.right!!)
-
-            // Copy inorder successor's data to current node (keep its color!)
+            val inOrderSuccessor: RBNode<K, V> = getMinNode(current.right!!)
             current.key = inOrderSuccessor.key
-
-            // Delete inorder successor just as we would delete a node with 0 or 1 child
-            movedUpNode = deleteNodeWithZeroOrOneChild(inOrderSuccessor)!!
+            movedUpNode = removeNodeWithZeroOrOneChild(inOrderSuccessor)
             deletedNodeColor = inOrderSuccessor.color
         }
-        if (deletedNodeColor == Color.BLACK) {
-            balanceAfterDelete(movedUpNode!!)
 
-            // Remove the temporary NIL node
-            if (movedUpNode.isNil) {
+        if (deletedNodeColor == Color.BLACK) {
+            balance(movedUpNode!!, true)
+            if (movedUpNode.isTemp) {
                 replaceParentsChild(movedUpNode.parent, movedUpNode, null)
             }
         }
     }
 
-    override fun balance(node: RBNode<K, V>) {
-        TODO("Not yet implemented")
+    override fun balance(node: RBNode<K, V>, afterRemove: Boolean?): RBNode<K, V>? {
+        if (afterRemove!!) {
+            balanceAfterRemove(node)
+        } else {
+            balanceAfterAdd(node)
+        }
+        return null
     }
 
-    private fun balanceAfterInsert(node: RBNode<K, V>) {
-        var parent = node.parent ?: return;
+    private fun balanceAfterAdd(node: RBNode<K, V>) {
+        var parent = node.parent ?: return
         if (parent.color == Color.BLACK) {
             return
         }
 
-        val grandparent = parent.parent;
+        val grandparent = parent.parent
         if (grandparent == null) {
-            parent.color = Color.BLACK;
+            parent.color = Color.BLACK
             return
         }
 
-        val uncle = getUncle(parent);
+        val uncle = getUncle(parent)
         if (uncle != null && uncle.color == Color.RED) {
-            parent.color = Color.BLACK;
-            grandparent.color = Color.RED;
-            uncle.color = Color.BLACK;
-            balanceAfterInsert(grandparent);
+            parent.color = Color.BLACK
+            grandparent.color = Color.RED
+            uncle.color = Color.BLACK
+            balanceAfterAdd(grandparent)
         } else if (parent == grandparent.left) {
             if (node == parent.right) {
-                rotateLeft(parent);
-                parent = node;
+                rotateLeft(parent)
+                parent = node
             }
-            rotateRight(grandparent);
-            parent.color = Color.BLACK;
-            grandparent.color = Color.RED;
+            rotateRight(grandparent)
+            parent.color = Color.BLACK
+            grandparent.color = Color.RED
         } else {
             if (node == parent.left) {
-                rotateRight(parent);
-                parent = node;
+                rotateRight(parent)
+                parent = node
             }
-            rotateLeft(grandparent);
-            parent.color = Color.BLACK;
-            grandparent.color = Color.RED;
+            rotateLeft(grandparent)
+            parent.color = Color.BLACK
+            grandparent.color = Color.RED
+        }
+    }
+
+    private fun balanceAfterRemove(node: RBNode<K, V>) {
+        if (node == root) {
+            return
+        }
+
+        var sibling = getSibling(node)
+        if (sibling?.color == Color.RED) {
+            handleRedSibling(node, sibling)
+            sibling = getSibling(node)!!
+        }
+
+        if (isBlack(sibling?.left) && isBlack(sibling?.right)) {
+            sibling?.color = Color.RED
+            if (node.parent!!.color == Color.RED) {
+                node.parent!!.color = Color.BLACK
+            } else {
+                balanceAfterRemove(node.parent!!)
+            }
+        } else {
+            handleBlackRedSibling(node, sibling!!)
         }
     }
 
@@ -166,7 +187,7 @@ class RBTree<K : Comparable<K>, V> : BalanceTree<K, V, RBNode<K, V>>() {
     }
 
 
-    private fun deleteNodeWithZeroOrOneChild(node: RBNode<K, V>): RBNode<K, V>? {
+    private fun removeNodeWithZeroOrOneChild(node: RBNode<K, V>): RBNode<K, V>? {
         return if (node.left != null) {
             replaceParentsChild(node.parent, node, node.left)
             node.left
@@ -175,7 +196,7 @@ class RBTree<K : Comparable<K>, V> : BalanceTree<K, V, RBNode<K, V>>() {
             node.right
         } else {
             var newChild: RBNode<K, V>? = node
-            newChild!!.isNil = true
+            newChild!!.isTemp = true
             if (node.color == Color.RED) {
                 newChild = null
             }
@@ -184,43 +205,6 @@ class RBTree<K : Comparable<K>, V> : BalanceTree<K, V, RBNode<K, V>>() {
         }
     }
 
-    private fun findMinimum(node: RBNode<K, V>): RBNode<K, V> {
-        var current = node
-        while (current.left != null) {
-            current = current.left!!
-        }
-        return current
-    }
-
-    private fun balanceAfterDelete(node: RBNode<K, V>) {
-        // Case 1: Examined node is root, end of recursion
-        if (node == root) {
-            // Uncomment the following line if you want to enforce black roots (rule 2):
-            // node.color = BLACK;
-            return
-        }
-        var sibling = getSibling(node)
-
-        // Case 2: Red sibling
-        if (sibling?.color == Color.RED) {
-            handleRedSibling(node, sibling)
-            sibling = getSibling(node)!! // Get new sibling for fall-through to cases 3-6
-        }
-
-        // Cases 3+4: Black sibling with two black children
-        if (isBlack(sibling?.left) && isBlack(sibling?.right)) {
-            sibling?.color = Color.RED
-
-            // Case 3: Black sibling with two black children + red parent
-            if (node.parent!!.color == Color.RED) {
-                node.parent!!.color = Color.BLACK
-            } else {
-                balanceAfterDelete(node.parent!!)
-            }
-        } else {
-            handleBlackSiblingWithAtLeastOneRedChild(node, sibling!!)
-        }
-    }
     private fun handleRedSibling(node: RBNode<K, V>, sibling: RBNode<K, V>) {
         sibling.color = Color.BLACK
         node.parent!!.color = Color.RED
@@ -231,11 +215,8 @@ class RBTree<K : Comparable<K>, V> : BalanceTree<K, V, RBNode<K, V>>() {
             rotateRight(node.parent!!)
         }
     }
-    private fun handleBlackSiblingWithAtLeastOneRedChild(node: RBNode<K, V>, sibling: RBNode<K, V>) {
+    private fun handleBlackRedSibling(node: RBNode<K, V>, sibling: RBNode<K, V>) {
         val nodeIsLeftChild = node == node.parent!!.left
-
-        // Case 5: Black sibling with at least one red child + "outer nephew" is black
-        // --> Recolor sibling and its child, and rotate around sibling
         if (nodeIsLeftChild && isBlack(sibling.right)) {
             sibling.left!!.color = Color.BLACK
             sibling.color = Color.RED
@@ -248,10 +229,6 @@ class RBTree<K : Comparable<K>, V> : BalanceTree<K, V, RBNode<K, V>>() {
             sibling.parent!!.left = node.parent!!.left
         }
 
-        // Fall-through to case 6...
-
-        // Case 6: Black sibling with at least one red child + "outer nephew" is red
-        // --> Recolor sibling + parent + sibling's child, and rotate around parent
         sibling.color = node.parent!!.color
         node.parent!!.color = Color.BLACK
         if (nodeIsLeftChild) {
@@ -265,12 +242,10 @@ class RBTree<K : Comparable<K>, V> : BalanceTree<K, V, RBNode<K, V>>() {
 
     private fun getSibling(node: RBNode<K, V>): RBNode<K, V>? {
         val parent = node.parent
-        return if (node == parent?.left) {
-            parent.right
-        } else if (node == parent?.right) {
-            parent.left
-        } else {
-            throw IllegalStateException("Parent is not a child of its grandparent")
+        return when (node) {
+            parent?.left -> parent.right
+            parent?.right -> parent.left
+            else -> throw IllegalStateException("Parent is not a child of its grandparent")
         }
     }
 
