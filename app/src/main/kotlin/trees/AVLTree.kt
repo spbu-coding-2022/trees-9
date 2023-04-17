@@ -6,8 +6,8 @@ import kotlin.math.max
 
 class AVLTree<K : Comparable<K>, V> : BalanceTree<K, V, AVLNode<K, V>>() {
 
-    override fun add(node: AVLNode<K, V>) {
-        root = recursiveAdd(root, node)
+    override fun add(key: K, value: V) {
+        root = recursiveAdd(root, AVLNode(key, value))
         updateHeight(root)
     }
 
@@ -18,6 +18,9 @@ class AVLTree<K : Comparable<K>, V> : BalanceTree<K, V, AVLNode<K, V>>() {
         }
         if (currentNode.key > node.key) {
             currentNode.left = recursiveAdd(currentNode.left, node)
+        }
+        if (currentNode.key == node.key) {
+            return node
         }
         return balance(currentNode)
     }
@@ -45,7 +48,7 @@ class AVLTree<K : Comparable<K>, V> : BalanceTree<K, V, AVLNode<K, V>>() {
         return balance(currentNode)
     }
 
-    override fun balance(node: AVLNode<K, V>): AVLNode<K, V> {
+    override fun balance(node: AVLNode<K, V>, afterRemove: Boolean?): AVLNode<K, V> {
         updateHeight(node)
         when (getBalanceFactor(node)) {
             -2 -> {

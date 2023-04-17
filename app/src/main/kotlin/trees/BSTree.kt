@@ -4,6 +4,7 @@ import trees.abstract_trees.BinaryTree
 import trees.nodes.BSNode
 
 class BSTree<K : Comparable<K>, V> : BinaryTree<K, V, BSNode<K, V>>() {
+
     override fun add(key: K, value: V) {
         root = recursiveAdd(root, BSNode(key, value))
     }
