@@ -43,6 +43,6 @@ abstract class BinaryTree<K : Comparable<K>, V, NODE_TYPE : Node<K, V, NODE_TYPE
         return minimal
     }
 
-    abstract fun add(node: NODE_TYPE)
+    abstract fun add(key: K, value: V)
     abstract fun remove(key: K)
 }

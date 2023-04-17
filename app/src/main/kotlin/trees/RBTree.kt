@@ -5,7 +5,8 @@ import trees.nodes.RBNode
 import trees.nodes.RBNode.Color
 
 class RBTree<K : Comparable<K>, V> : BalanceTree<K, V, RBNode<K, V>>() {
-    override fun add(node: RBNode<K, V>) {
+    override fun add(key: K, value: V) {
+        val node = RBNode(key, value)
         if (root == null) {
             root = node
             return
