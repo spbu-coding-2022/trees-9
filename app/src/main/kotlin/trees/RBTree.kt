@@ -12,7 +12,7 @@ class RBTree<K : Comparable<K>, V> : BalanceTree<K, V, RBNode<K, V>>() {
         TODO("Not yet implemented")
     }
 
-    override fun balance() {
+    override fun balance(node: RBNode<K, V>): RBNode<K, V>? {
         TODO("Not yet implemented")
     }
 }
