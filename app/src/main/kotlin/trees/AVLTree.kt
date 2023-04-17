@@ -74,7 +74,7 @@ class AVLTree<K : Comparable<K>, V> : BalanceTree<K, V, AVLNode<K, V>>() {
         return node
     }
 
-    private fun getHeight(node: AVLNode<K, V>?): Int {
+    internal fun getHeight(node: AVLNode<K, V>?): Int {
         return node?.height ?: -1
     }
 
