@@ -1,12 +1,11 @@
 # Trees by team 9
 ### Implemented:
-- Binary search tree
-- Abstract class for red-black and AVL tree
+- Binary search, red-black, AVL tree
+- Tests for all types of implemented trees
+- Flat-file database for BST support
 
 ### Future:
-- AVL and RB tree
-- Auto-tests
-- Data bases for trees
+- Data bases for AVL and RB tree
 - UI support
 
 #### Created by: gladiuswq, raf-nr, vacmannnn

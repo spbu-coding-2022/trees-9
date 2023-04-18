@@ -249,6 +249,7 @@ class RBTree<K : Comparable<K>, V> : BalanceTree<K, V, RBNode<K, V>>() {
             rotateRight(parent)
         }
     }
+
     private fun handleBlackRedSibling(node: RBNode<K, V>?, sibling: RBNode<K, V>?) {
         val parent = node?.parent
         if (node == null || sibling == null || parent == null) {
