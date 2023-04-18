@@ -230,6 +230,7 @@ class RBTree<K : Comparable<K>, V> : BalanceTree<K, V, RBNode<K, V>>() {
             rotateRight(node.parent!!)
         }
     }
+
     private fun handleBlackRedSibling(node: RBNode<K, V>, sibling: RBNode<K, V>) {
         var mutableSibling: RBNode<K, V> = sibling
         val nodeIsLeftChild = (node == node.parent!!.left)
