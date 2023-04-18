@@ -152,7 +152,7 @@ class RBTree<K : Comparable<K>, V> : BalanceTree<K, V, RBNode<K, V>>() {
         } else if (grandparent?.right == parent) {
             grandparent.left
         } else {
-            throw IllegalStateException("Node with key ${parent.key} is not a child of its grandparent")
+            throw IllegalStateException("Node with key ${parent.key} is not a child of its parent")
         }
     }
 
