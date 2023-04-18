@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
 import treesValidChecker.isRbOk
+import java.lang.IllegalStateException
 
 class RBTreeTest {
     private val tree = RBTree<Int, Int>()
@@ -40,6 +41,13 @@ class RBTreeTest {
         for (i in (0..10000).shuffled()) {
             tree.remove(i)
             assertTrue(isRbOk())
+        }
+    }
+    @Test
+    fun `remove a node that is not in tree`() {
+        assertThrows(IllegalStateException::class.java) {
+            tree.add(100,0)
+            tree.remove(101)
         }
     }
 }
