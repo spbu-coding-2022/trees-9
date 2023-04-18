@@ -5,14 +5,18 @@ import trees.nodes.RBNode
 import trees.nodes.RBNode.Color
 
 class RBTree<K : Comparable<K>, V> : BalanceTree<K, V, RBNode<K, V>>() {
+
     override fun add(key: K, value: V) {
         val node = RBNode(key, value)
+
         if (root == null) {
             root = node
             return
         }
+
         var current = root
         var parent = current
+
         while (current != null) {
             parent = current
             current = when {
@@ -21,18 +25,20 @@ class RBTree<K : Comparable<K>, V> : BalanceTree<K, V, RBNode<K, V>>() {
                 else -> throw IllegalArgumentException("Node with key ${node.key} is already in the tree")
             }
         }
+
         if (parent!!.key < node.key) {
             parent.right = node
         } else {
             parent.left = node
         }
-        node.parent = parent
 
+        node.parent = parent
         balance(node, false)
     }
 
     override fun remove(key: K) {
         var current = root
+
         while (current != null && current.key != key) {
             current = if (key < current.key) {
                 current.left
@@ -40,8 +46,9 @@ class RBTree<K : Comparable<K>, V> : BalanceTree<K, V, RBNode<K, V>>() {
                 current.right
             }
         }
+
         if (current == null) {
-            throw IllegalStateException("There is no such node with key $key in tree")
+            throw IllegalStateException("There is no such node with key $key in the tree")
         }
 
         val movedUpNode: RBNode<K, V>?
@@ -53,8 +60,8 @@ class RBTree<K : Comparable<K>, V> : BalanceTree<K, V, RBNode<K, V>>() {
         } else {
             val inOrderSuccessor: RBNode<K, V> = getMinNode(current.right!!)
             current.key = inOrderSuccessor.key
-            movedUpNode = removeNodeWithZeroOrOneChild(inOrderSuccessor)
             deletedNodeColor = inOrderSuccessor.color
+            movedUpNode = removeNodeWithZeroOrOneChild(inOrderSuccessor)
         }
 
         if (deletedNodeColor == Color.BLACK) {
@@ -93,18 +100,22 @@ class RBTree<K : Comparable<K>, V> : BalanceTree<K, V, RBNode<K, V>>() {
             uncle.color = Color.BLACK
             balanceAfterAdd(grandparent)
         } else if (parent == grandparent.left) {
+
             if (node == parent.right) {
                 rotateLeft(parent)
                 parent = node
             }
+
             rotateRight(grandparent)
             parent.color = Color.BLACK
             grandparent.color = Color.RED
         } else {
+
             if (node == parent.left) {
                 rotateRight(parent)
                 parent = node
             }
+
             rotateLeft(grandparent)
             parent.color = Color.BLACK
             grandparent.color = Color.RED
@@ -119,10 +130,10 @@ class RBTree<K : Comparable<K>, V> : BalanceTree<K, V, RBNode<K, V>>() {
         var sibling = getSibling(node)
         if (sibling?.color == Color.RED) {
             handleRedSibling(node, sibling)
-            sibling = getSibling(node)!!
+            sibling = getSibling(node)
         }
 
-        if (isBlack(sibling?.left) && isBlack(sibling?.right)) {
+        if (isBlackOrNull(sibling?.left) && isBlackOrNull(sibling?.right)) {
             sibling?.color = Color.RED
             if (node.parent!!.color == Color.RED) {
                 node.parent!!.color = Color.BLACK
@@ -141,7 +152,7 @@ class RBTree<K : Comparable<K>, V> : BalanceTree<K, V, RBNode<K, V>>() {
         } else if (grandparent?.right == parent) {
             grandparent.left
         } else {
-            throw IllegalStateException("Parent is not a child of its grandparent")
+            throw IllegalStateException("Node with key ${parent.key} is not a child of its parent")
         }
     }
 
@@ -153,7 +164,7 @@ class RBTree<K : Comparable<K>, V> : BalanceTree<K, V, RBNode<K, V>>() {
         } else if (parent.right == oldChild) {
             parent.right = newChild
         } else {
-            throw IllegalStateException("Node is not a child if its parent")
+            throw IllegalStateException("Node with key ${parent.key} is not a parent if its child")
         }
 
         if (newChild != null) {
@@ -165,9 +176,11 @@ class RBTree<K : Comparable<K>, V> : BalanceTree<K, V, RBNode<K, V>>() {
         val parent: RBNode<K, V>? = node.parent
         val leftChild: RBNode<K, V>? = node.left
         node.left = leftChild?.right
+
         if (leftChild?.right != null) {
             leftChild.right!!.parent = node
         }
+
         leftChild!!.right = node
         node.parent = leftChild
 
@@ -178,9 +191,11 @@ class RBTree<K : Comparable<K>, V> : BalanceTree<K, V, RBNode<K, V>>() {
         val parent: RBNode<K, V>? = node.parent
         val rightChild: RBNode<K, V>? = node.right
         node.right = rightChild?.left
+
         if (rightChild?.left != null) {
             rightChild.left!!.parent = node
         }
+
         rightChild!!.left = node
         node.parent = rightChild
 
@@ -209,47 +224,50 @@ class RBTree<K : Comparable<K>, V> : BalanceTree<K, V, RBNode<K, V>>() {
     private fun handleRedSibling(node: RBNode<K, V>, sibling: RBNode<K, V>) {
         sibling.color = Color.BLACK
         node.parent!!.color = Color.RED
-
         if (node == node.parent!!.left) {
             rotateLeft(node.parent!!)
         } else {
             rotateRight(node.parent!!)
         }
     }
+
     private fun handleBlackRedSibling(node: RBNode<K, V>, sibling: RBNode<K, V>) {
-        val nodeIsLeftChild = node == node.parent!!.left
-        if (nodeIsLeftChild && isBlack(sibling.right)) {
+        var mutableSibling: RBNode<K, V> = sibling
+        val nodeIsLeftChild = (node == node.parent!!.left)
+        if (nodeIsLeftChild && isBlackOrNull(sibling.right)) {
+
             sibling.left!!.color = Color.BLACK
             sibling.color = Color.RED
             rotateRight(sibling)
-            sibling.parent!!.right =  node.parent!!.right
-        } else if (!nodeIsLeftChild && isBlack(sibling.left)) {
+            mutableSibling = node.parent!!.right!!
+        } else if (!nodeIsLeftChild && isBlackOrNull(sibling.left)) {
             sibling.right!!.color = Color.BLACK
             sibling.color = Color.RED
             rotateLeft(sibling)
-            sibling.parent!!.left = node.parent!!.left
+            mutableSibling = node.parent!!.left!!
         }
 
-        sibling.color = node.parent!!.color
+        mutableSibling.color = node.parent!!.color
         node.parent!!.color = Color.BLACK
         if (nodeIsLeftChild) {
-            sibling.right!!.color = Color.BLACK
+            mutableSibling.right!!.color = Color.BLACK
             rotateLeft(node.parent!!)
         } else {
-            sibling.left!!.color = Color.BLACK
+            mutableSibling.left!!.color = Color.BLACK
             rotateRight(node.parent!!)
         }
     }
+
     private fun getSibling(node: RBNode<K, V>): RBNode<K, V>? {
         val parent = node.parent
         return when (node) {
             parent?.left -> parent.right
             parent?.right -> parent.left
-            else -> throw IllegalStateException("Parent is not a child of its grandparent")
+            else -> throw IllegalStateException("Node with key ${node.key} is not a child of its parent")
         }
     }
 
-    private fun isBlack(node: RBNode<K, V>?): Boolean {
+    private fun isBlackOrNull(node: RBNode<K, V>?): Boolean {
         return node == null || node.color == Color.BLACK
     }
 }
