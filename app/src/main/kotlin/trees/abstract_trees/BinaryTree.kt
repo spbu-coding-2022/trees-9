@@ -1,7 +1,6 @@
 package trees.abstract_trees
 
 import trees.nodes.Node
-import trees.nodes.RBNode
 
 abstract class BinaryTree<K : Comparable<K>, V, NODE_TYPE : Node<K, V, NODE_TYPE>> {
     internal var root: NODE_TYPE? = null
