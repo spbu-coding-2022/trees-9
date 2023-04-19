@@ -40,7 +40,7 @@ class SQLiteDB(private val path: String): Closeable {
             addNodeStatement.setDouble(4, 0.0)
             addNodeStatement.execute()
         } catch (problem: Exception) {
-            logger.error(problem) { "Cannot add node: $node" }
+            logger.error(problem) { "Cannot add node: ${node.key}" }
         }
     }
 
