@@ -26,7 +26,11 @@ class RBTree<K : Comparable<K>, V> : BalanceTree<K, V, RBNode<K, V>>() {
             }
         }
 
-        if (parent!!.key < node.key) {
+        if (parent == null) {
+            throw IllegalStateException("Only root parent can be null")
+        }
+
+        if (parent.key < node.key) {
             parent.right = node
         } else {
             parent.left = node
@@ -54,26 +58,32 @@ class RBTree<K : Comparable<K>, V> : BalanceTree<K, V, RBNode<K, V>>() {
         val movedUpNode: RBNode<K, V>?
         val deletedNodeColor: Color
 
-        if (current.left == null || current.right == null) {
+        val leftSibling = current.left
+        val rightSibling = current.right
+
+        if (leftSibling == null || rightSibling == null) {
             movedUpNode = removeNodeWithZeroOrOneChild(current)
             deletedNodeColor = current.color
         } else {
-            val inOrderSuccessor: RBNode<K, V> = getMinNode(current.right!!)
+            val inOrderSuccessor = getMinNode(rightSibling)
             current.key = inOrderSuccessor.key
             deletedNodeColor = inOrderSuccessor.color
             movedUpNode = removeNodeWithZeroOrOneChild(inOrderSuccessor)
         }
 
         if (deletedNodeColor == Color.BLACK) {
-            balance(movedUpNode!!, true)
+            if (movedUpNode == null) {
+                throw IllegalStateException("Incorrect tree structure")
+            }
+            balance(movedUpNode, true)
             if (movedUpNode.isTemp) {
                 replaceParentsChild(movedUpNode.parent, movedUpNode, null)
             }
         }
     }
 
-    override fun balance(node: RBNode<K, V>, afterRemove: Boolean?): RBNode<K, V>? {
-        if (afterRemove!!) {
+    override fun balance(node: RBNode<K, V>, afterRemove: Boolean): RBNode<K, V>? {
+        if (afterRemove) {
             balanceAfterRemove(node)
         } else {
             balanceAfterAdd(node)
@@ -82,8 +92,8 @@ class RBTree<K : Comparable<K>, V> : BalanceTree<K, V, RBNode<K, V>>() {
     }
 
     private fun balanceAfterAdd(node: RBNode<K, V>) {
-        var parent = node.parent ?: return
-        if (parent.color == Color.BLACK) {
+        var parent = node.parent
+        if (parent == null || parent.color == Color.BLACK) {
             return
         }
 
@@ -127,21 +137,26 @@ class RBTree<K : Comparable<K>, V> : BalanceTree<K, V, RBNode<K, V>>() {
             return
         }
 
-        var sibling = getSibling(node)
-        if (sibling?.color == Color.RED) {
+        val parent = node.parent
+        var sibling = getSibling(node) ?: throw IllegalStateException("Can't balance node with null sibling")
+
+        if (sibling.color == Color.RED) {
             handleRedSibling(node, sibling)
-            sibling = getSibling(node)
+            sibling = getSibling(node) ?: throw IllegalStateException("Incorrect node relations")
         }
 
-        if (isBlackOrNull(sibling?.left) && isBlackOrNull(sibling?.right)) {
-            sibling?.color = Color.RED
-            if (node.parent!!.color == Color.RED) {
-                node.parent!!.color = Color.BLACK
+        if (isBlackOrNull(sibling.left) && isBlackOrNull(sibling.right)) {
+            sibling.color = Color.RED
+            if (parent == null) {
+                throw IllegalStateException("Only root can have null parent")
+            }
+            if (parent.color == Color.RED) {
+                parent.color = Color.BLACK
             } else {
-                balanceAfterRemove(node.parent!!)
+                balanceAfterRemove(parent)
             }
         } else {
-            handleBlackRedSibling(node, sibling!!)
+            handleBlackRedSibling(node, sibling)
         }
     }
 
@@ -173,35 +188,38 @@ class RBTree<K : Comparable<K>, V> : BalanceTree<K, V, RBNode<K, V>>() {
     }
 
     private fun rotateRight(node: RBNode<K, V>) {
-        val parent: RBNode<K, V>? = node.parent
-        val leftChild: RBNode<K, V>? = node.left
-        node.left = leftChild?.right
+        val parent = node.parent
+        val leftChild = node.left ?: throw IllegalStateException("Left child of node with key ${node.key} can't be null")
+        val cousin = leftChild.right
 
-        if (leftChild?.right != null) {
-            leftChild.right!!.parent = node
+        node.left = cousin
+
+        if (cousin != null) {
+            cousin.parent = node
         }
 
-        leftChild!!.right = node
+        leftChild.right = node
         node.parent = leftChild
 
         replaceParentsChild(parent, node, leftChild)
     }
 
     private fun rotateLeft(node: RBNode<K, V>) {
-        val parent: RBNode<K, V>? = node.parent
-        val rightChild: RBNode<K, V>? = node.right
-        node.right = rightChild?.left
+        val parent = node.parent
+        val rightChild = node.right ?: throw IllegalStateException("Right child of node with key ${node.key} can't be null")
+        val cousin = rightChild.left
 
-        if (rightChild?.left != null) {
-            rightChild.left!!.parent = node
+        node.right = cousin
+
+        if (cousin != null) {
+            cousin.parent = node
         }
 
-        rightChild!!.left = node
+        rightChild.left = node
         node.parent = rightChild
 
         replaceParentsChild(parent, node, rightChild)
     }
-
 
     private fun removeNodeWithZeroOrOneChild(node: RBNode<K, V>): RBNode<K, V>? {
         return if (node.left != null) {
@@ -211,8 +229,8 @@ class RBTree<K : Comparable<K>, V> : BalanceTree<K, V, RBNode<K, V>>() {
             replaceParentsChild(node.parent, node, node.right)
             node.right
         } else {
+            node.isTemp = true
             var newChild: RBNode<K, V>? = node
-            newChild!!.isTemp = true
             if (node.color == Color.RED) {
                 newChild = null
             }
@@ -222,39 +240,48 @@ class RBTree<K : Comparable<K>, V> : BalanceTree<K, V, RBNode<K, V>>() {
     }
 
     private fun handleRedSibling(node: RBNode<K, V>, sibling: RBNode<K, V>) {
+        val parent = node.parent ?: throw IllegalStateException("Can't handle node with null parent")
         sibling.color = Color.BLACK
-        node.parent!!.color = Color.RED
-        if (node == node.parent!!.left) {
-            rotateLeft(node.parent!!)
+        parent.color = Color.RED
+        if (node == parent.left) {
+            rotateLeft(parent)
         } else {
-            rotateRight(node.parent!!)
+            rotateRight(parent)
         }
     }
 
-    private fun handleBlackRedSibling(node: RBNode<K, V>, sibling: RBNode<K, V>) {
-        var mutableSibling: RBNode<K, V> = sibling
-        val nodeIsLeftChild = (node == node.parent!!.left)
-        if (nodeIsLeftChild && isBlackOrNull(sibling.right)) {
-
-            sibling.left!!.color = Color.BLACK
-            sibling.color = Color.RED
-            rotateRight(sibling)
-            mutableSibling = node.parent!!.right!!
-        } else if (!nodeIsLeftChild && isBlackOrNull(sibling.left)) {
-            sibling.right!!.color = Color.BLACK
-            sibling.color = Color.RED
-            rotateLeft(sibling)
-            mutableSibling = node.parent!!.left!!
+    private fun handleBlackRedSibling(node: RBNode<K, V>?, sibling: RBNode<K, V>?) {
+        val parent = node?.parent
+        if (node == null || sibling == null || parent == null) {
+            throw IllegalStateException("Can't handle null nodes")
         }
 
-        mutableSibling.color = node.parent!!.color
-        node.parent!!.color = Color.BLACK
+        var mutableSibling = sibling
+        val nodeIsLeftChild = (node == parent.left)
+        if (nodeIsLeftChild && isBlackOrNull(sibling.right)) {
+            val tempNode = sibling.left ?: throw IllegalStateException("Left child of node with key ${sibling.key} can't be null")
+            tempNode.color = Color.BLACK
+            sibling.color = Color.RED
+            rotateRight(sibling)
+            mutableSibling = parent.right ?: throw IllegalStateException("Right child of node with key ${parent.key} can't be null")
+        } else if (!nodeIsLeftChild && isBlackOrNull(sibling.left)) {
+            val tempNode = sibling.right ?: throw IllegalStateException("Right child of node with key ${sibling.key} can't be null")
+            tempNode.color = Color.BLACK
+            sibling.color = Color.RED
+            rotateLeft(sibling)
+            mutableSibling = parent.left ?: throw IllegalStateException("Left child of node with key ${parent.key} can't be null")
+        }
+
+        mutableSibling.color = parent.color
+        parent.color = Color.BLACK
         if (nodeIsLeftChild) {
-            mutableSibling.right!!.color = Color.BLACK
-            rotateLeft(node.parent!!)
+            val tempNode = mutableSibling.right ?: throw IllegalStateException("Right child of node with key ${mutableSibling.key} can't be null")
+            tempNode.color = Color.BLACK
+            rotateLeft(parent)
         } else {
-            mutableSibling.left!!.color = Color.BLACK
-            rotateRight(node.parent!!)
+            val tempNode = mutableSibling.left ?: throw IllegalStateException("Left child of node with key ${parent.key} can't be null")
+            tempNode.color = Color.BLACK
+            rotateRight(parent)
         }
     }
 
