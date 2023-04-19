@@ -28,6 +28,6 @@ fun writeAllNodesToFile(node: BSNode<Int, String>?, tree: BSTree<Int, String>, f
 fun insertAllNodesToTree(tree: BSTree<Int, String>, file: File) {
     file.forEachLine {
         val inputs = it.split(" ").toTypedArray()
-        tree.add(inputs[0].toInt(),inputs[1])
+        tree.add(inputs[0].toInt(), inputs[1])
     }
 }

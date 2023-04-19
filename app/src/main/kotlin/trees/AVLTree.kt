@@ -89,7 +89,7 @@ class AVLTree<K : Comparable<K>, V> : BalanceTree<K, V, AVLNode<K, V>>() {
 
     private fun rotateRight(node: AVLNode<K, V>): AVLNode<K, V> {
         val leftChild =
-            node.left ?: throw IllegalArgumentException("When turning right, the node must have a child on the right.")
+            node.left ?: throw IllegalArgumentException("When turning right, the node must have a child on the right")
         val rightGrandChild = leftChild.right
         leftChild.right = node
         node.left = rightGrandChild
@@ -99,7 +99,7 @@ class AVLTree<K : Comparable<K>, V> : BalanceTree<K, V, AVLNode<K, V>>() {
 
     private fun rotateLeft(node: AVLNode<K, V>): AVLNode<K, V> {
         val rightChild =
-            node.right ?: throw IllegalArgumentException("When turning right, the node must have a child on the right.")
+            node.right ?: throw IllegalArgumentException("When turning right, the node must have a child on the right")
         val leftGrandChild = rightChild.left
         rightChild.left = node
         node.right = leftGrandChild

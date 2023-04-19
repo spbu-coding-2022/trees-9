@@ -9,7 +9,7 @@ import trees.AVLTree
 private val logger = KotlinLogging.logger { }
 private const val DB_DRIVER = "jdbc:sqlite"
 
-class SQLiteDB(private val path: String): Closeable {
+class SQLiteDB(private val path: String) : Closeable {
     private val connection = DriverManager.getConnection("$DB_DRIVER:$path")
         ?: throw SQLException("Cannot connect to database")
     private val addNodeStatement by lazy { connection.prepareStatement("INSERT INTO nodes (key, value, x, y) VALUES (?, ?, ?, ?);") }
@@ -19,13 +19,13 @@ class SQLiteDB(private val path: String): Closeable {
     }
 
     fun open() {
-        connection.createStatement().also {statement ->
+        connection.createStatement().also { statement ->
             try {
-                statement.execute("CREATE TABLE  IF NOT EXISTS nodes(key INTEGER NOT NULL PRIMARY KEY, value text, x DOUBLE NOT NULL, y DOUBLE NOT NULL);")
+                statement.execute("CREATE TABLE IF NOT EXISTS nodes(key INTEGER NOT NULL PRIMARY KEY, value text, x DOUBLE NOT NULL, y DOUBLE NOT NULL);")
                 logger.info { "Tables created or already exists" }
             } catch (problem: Exception) {
                 println(problem)
-                logger.error(problem) {"Cannot create table in database"}
+                logger.error(problem) { "Cannot create table in database" }
             } finally {
                 statement.close()
             }
@@ -40,7 +40,7 @@ class SQLiteDB(private val path: String): Closeable {
             addNodeStatement.setDouble(4, 0.0)
             addNodeStatement.execute()
         } catch (problem: Exception) {
-            logger.error(problem) { "Cannot add node: ${node.key}" }
+            logger.error(problem) { "Cannot add node with key ${node.key}" }
         }
     }
 
@@ -52,7 +52,7 @@ class SQLiteDB(private val path: String): Closeable {
                 current.left?.key.apply(stack::add)
             if (current?.right != null)
                 current.right?.key.apply(stack::add)
-            current?.let{addNode((it))}
+            current?.let { addNode((it)) }
         }
     }
 
@@ -67,7 +67,7 @@ class SQLiteDB(private val path: String): Closeable {
                 nodesList.add(AVLNode(key, value))
             }
         } catch (problem: Exception) {
-            logger.error(problem) {"Failed to select"}
+            logger.error(problem) { "Failed to select" }
         }
         return nodesList
     }
