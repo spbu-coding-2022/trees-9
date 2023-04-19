@@ -26,8 +26,8 @@ class AVLTree<K : Comparable<K>, V> : BalanceTree<K, V, AVLNode<K, V>>() {
     }
 
     override fun remove(key: K) {
-        val node = find(key)
-        root = node?.let { recursiveRemove(root, it) }
+        val node = find(key) ?: throw IllegalStateException("There is no such node with key $key in the tree")
+        root = recursiveRemove(root, node)
         updateHeight(root)
     }
 
