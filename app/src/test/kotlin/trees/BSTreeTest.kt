@@ -3,6 +3,7 @@ package trees
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 import treesValidChecker.isBstOk
+import java.lang.IllegalStateException
 
 class BSTreeTest {
     private val tree = BSTree<Int, Int>()
@@ -39,6 +40,14 @@ class BSTreeTest {
         for (i in (0..10000).shuffled()) {
             tree.remove(i)
             assertTrue(isBstOk())
+        }
+    }
+
+    @Test
+    fun `remove a node that is not in tree`() {
+        assertThrows(IllegalStateException::class.java) {
+            tree.add(100,0)
+            tree.remove(101)
         }
     }
 }

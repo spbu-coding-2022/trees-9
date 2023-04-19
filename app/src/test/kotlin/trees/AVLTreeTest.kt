@@ -3,6 +3,7 @@ package trees
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 import treesValidChecker.isAVLOk
+import java.lang.IllegalStateException
 
 class AVLTreeTest {
     private val tree = AVLTree<Int, Int>()
@@ -39,6 +40,14 @@ class AVLTreeTest {
         for (i in (0..10000).shuffled()) {
             tree.remove(i)
             assertTrue(isAVLOk())
+        }
+    }
+
+    @Test
+    fun `remove a node that is not in tree`() {
+        assertThrows(IllegalStateException::class.java) {
+            tree.add(100,0)
+            tree.remove(101)
         }
     }
 }
