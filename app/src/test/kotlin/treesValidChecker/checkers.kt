@@ -31,7 +31,7 @@ fun isAVLOk(node: AVLNode<Int, Int>? = AVLtree.root): Boolean {
     }
     val lh = AVLtree.getHeight(node.left)
     val rh = AVLtree.getHeight(node.right)
-    return abs(lh-rh) <= 1 && isAVLOk(node.left) && isAVLOk(node.right)
+    return abs(lh - rh) <= 1 && isAVLOk(node.left) && isAVLOk(node.right)
 }
 
 val RBtree = RBTree<Int, Int>()
@@ -44,7 +44,8 @@ fun isRbOk(node: RBNode<Int, Int>? = RBtree.root): Boolean {
     val blackRight = numOfBlack(node.right)
     return !(blackLeft != blackRight || blackLeft == -1 || !noTwoRedInARow())
 }
-fun numOfBlack(node: RBNode<Int,Int>? = RBtree.root): Int {
+
+fun numOfBlack(node: RBNode<Int, Int>? = RBtree.root): Int {
     if (node == null)
         return 0
     val blackLeft = numOfBlack(node.left)
@@ -58,7 +59,7 @@ fun numOfBlack(node: RBNode<Int,Int>? = RBtree.root): Int {
     return blackLeft
 }
 
-fun noTwoRedInARow(node: RBNode<Int,Int>? = RBtree.root, row: Int = 0): Boolean {
+fun noTwoRedInARow(node: RBNode<Int, Int>? = RBtree.root, row: Int = 0): Boolean {
     if (node == null)
         return true
     if (node.color == RBNode.Color.BLACK) {
@@ -66,5 +67,5 @@ fun noTwoRedInARow(node: RBNode<Int,Int>? = RBtree.root, row: Int = 0): Boolean 
     }
     if (row == 1)
         return false
-    return (noTwoRedInARow(node.left,1) && noTwoRedInARow(node.right,1))
+    return (noTwoRedInARow(node.left, 1) && noTwoRedInARow(node.right, 1))
 }

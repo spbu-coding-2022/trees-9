@@ -1,9 +1,8 @@
 package trees
 
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Test
 import treesValidChecker.isBstOk
-import java.lang.IllegalStateException
 
 class BSTreeTest {
     private val tree = BSTree<Int, Int>()
@@ -46,7 +45,7 @@ class BSTreeTest {
     @Test
     fun `remove a node that is not in tree`() {
         assertThrows(IllegalStateException::class.java) {
-            tree.add(100,0)
+            tree.add(100, 0)
             tree.remove(101)
         }
     }
