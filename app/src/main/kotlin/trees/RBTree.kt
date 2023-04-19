@@ -218,6 +218,7 @@ class RBTree<K : Comparable<K>, V> : BalanceTree<K, V, RBNode<K, V>>() {
         }
 
         rightChild.left = node
+
         node.parent = rightChild
 
         replaceParentsChild(parent, node, rightChild)
@@ -233,6 +234,7 @@ class RBTree<K : Comparable<K>, V> : BalanceTree<K, V, RBNode<K, V>>() {
         } else {
             node.isTemp = true
             var newChild: RBNode<K, V>? = node
+            
             if (node.color == Color.RED) {
                 newChild = null
             }

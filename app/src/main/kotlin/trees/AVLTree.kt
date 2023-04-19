@@ -48,6 +48,7 @@ class AVLTree<K : Comparable<K>, V> : BalanceTree<K, V, AVLNode<K, V>>() {
         return balance(currentNode)
     }
 
+
     override fun balance(node: AVLNode<K, V>, afterRemove: Boolean): AVLNode<K, V> {
         updateHeight(node)
         when (getBalanceFactor(node)) {
