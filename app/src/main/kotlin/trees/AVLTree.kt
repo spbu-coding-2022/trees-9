@@ -26,8 +26,8 @@ class AVLTree<K : Comparable<K>, V> : BalanceTree<K, V, AVLNode<K, V>>() {
     }
 
     override fun remove(key: K) {
-        val node = find(key)
-        root = node?.let { recursiveRemove(root, it) }
+        val node = find(key) ?: throw IllegalStateException("There is no such node with key $key in the tree")
+        root = recursiveRemove(root, node)
         updateHeight(root)
     }
 
@@ -48,7 +48,8 @@ class AVLTree<K : Comparable<K>, V> : BalanceTree<K, V, AVLNode<K, V>>() {
         return balance(currentNode)
     }
 
-    override fun balance(node: AVLNode<K, V>, afterRemove: Boolean?): AVLNode<K, V> {
+
+    override fun balance(node: AVLNode<K, V>, afterRemove: Boolean): AVLNode<K, V> {
         updateHeight(node)
         when (getBalanceFactor(node)) {
             -2 -> {
@@ -89,7 +90,7 @@ class AVLTree<K : Comparable<K>, V> : BalanceTree<K, V, AVLNode<K, V>>() {
 
     private fun rotateRight(node: AVLNode<K, V>): AVLNode<K, V> {
         val leftChild =
-            node.left ?: throw IllegalArgumentException("When turning right, the node must have a child on the right.")
+            node.left ?: throw IllegalArgumentException("When turning right, the node must have a child on the right")
         val rightGrandChild = leftChild.right
         leftChild.right = node
         node.left = rightGrandChild
@@ -99,7 +100,7 @@ class AVLTree<K : Comparable<K>, V> : BalanceTree<K, V, AVLNode<K, V>>() {
 
     private fun rotateLeft(node: AVLNode<K, V>): AVLNode<K, V> {
         val rightChild =
-            node.right ?: throw IllegalArgumentException("When turning right, the node must have a child on the right.")
+            node.right ?: throw IllegalArgumentException("When turning right, the node must have a child on the right")
         val leftGrandChild = rightChild.left
         rightChild.left = node
         node.right = leftGrandChild

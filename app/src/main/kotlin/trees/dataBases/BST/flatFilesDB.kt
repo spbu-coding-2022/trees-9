@@ -11,6 +11,21 @@ fun checkIfFileExist(file: File): Boolean {
     return file.exists()
 }
 
+fun removeTree(file: File): Boolean {
+    if (checkIfFileExist(file)) {
+        var result = file.delete()
+        if (result) {
+            result = file.createNewFile()
+            if (result) {
+                return result
+            }
+            throw Exception("Fail with file create")
+        }
+        throw Exception("Fail with file remove")
+    }
+    throw Exception("File with tree not exist")
+}
+
 fun writeAllNodesToFile(node: BSNode<Int, String>?, tree: BSTree<Int, String>, file: File) {
     val stack = mutableListOf(node?.key)
     var stringToWrite: String
@@ -28,6 +43,6 @@ fun writeAllNodesToFile(node: BSNode<Int, String>?, tree: BSTree<Int, String>, f
 fun insertAllNodesToTree(tree: BSTree<Int, String>, file: File) {
     file.forEachLine {
         val inputs = it.split(" ").toTypedArray()
-        tree.add(inputs[0].toInt(),inputs[1])
+        tree.add(inputs[0].toInt(), inputs[1])
     }
 }
