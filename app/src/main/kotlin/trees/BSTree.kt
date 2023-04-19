@@ -24,8 +24,8 @@ class BSTree<K : Comparable<K>, V> : BinaryTree<K, V, BSNode<K, V>>() {
     }
 
     override fun remove(key: K) {
-        val node = find(key)
-        root = node?.let { recursiveRemove(root, it) }
+        val node = find(key) ?: throw IllegalStateException("There is no such node with key $key in the tree")
+        root = recursiveRemove(root, node)
     }
 
     private fun recursiveRemove(currentNode: BSNode<K, V>?, node: BSNode<K, V>): BSNode<K, V>? {
