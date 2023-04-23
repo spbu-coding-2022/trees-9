@@ -27,6 +27,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.1")
 
     // This dependency is used by the application.
+    implementation ("org.apache.commons:commons-csv:1.5")
     implementation("com.google.guava:guava:31.1-jre")
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")

@@ -1,5 +1,8 @@
 package trees.dataBases.BST
 
+import org.apache.commons.csv.CSVFormat
+import org.apache.commons.csv.CSVParser
+import org.apache.commons.csv.CSVPrinter
 import trees.BSTree
 import trees.nodes.BSNode
 import java.io.File
@@ -11,7 +14,7 @@ fun checkIfFileExist(file: File): Boolean {
     return file.exists()
 }
 
-fun removeTree(file: File): Boolean {
+fun removeFile(file: File): Boolean {
     if (checkIfFileExist(file)) {
         var result = file.delete()
         if (result) {
@@ -28,21 +31,28 @@ fun removeTree(file: File): Boolean {
 
 fun writeAllNodesToFile(node: BSNode<Int, String>?, tree: BSTree<Int, String>, file: File) {
     val stack = mutableListOf(node?.key)
-    var stringToWrite: String
-    while (stack.isNotEmpty()) {
-        val current = stack.removeLast()?.let { tree.find(it) }
-        if (current?.left != null)
-            current.left?.key.apply(stack::add)
-        if (current?.right != null)
-            current.right?.key.apply(stack::add)
-        stringToWrite = "${current?.key}${current?.value} 0 0\n"
-        file.appendText(stringToWrite)
+    file.bufferedWriter().use {
+        val csvPrinter = CSVPrinter(it, CSVFormat.DEFAULT)
+        while (stack.isNotEmpty()) {
+            val current = stack.removeLast()?.let {current -> tree.find(current) }
+            if (current?.left != null)
+                current.left?.key.apply(stack::add)
+            if (current?.right != null)
+                current.right?.key.apply(stack::add)
+            csvPrinter.printRecord("${current?.key}","${current?.value}","0","0")
+        }
     }
 }
 
 fun insertAllNodesToTree(tree: BSTree<Int, String>, file: File) {
-    file.forEachLine {
-        val inputs = it.split(" ").toTypedArray()
-        tree.add(inputs[0].toInt(), inputs[1])
+    file.bufferedReader ().use {
+        val csvParser = CSVParser(it, CSVFormat.DEFAULT)
+        for(csvRecord in csvParser) {
+            val nodeKey = csvRecord.get(0)
+            val nodeValue = csvRecord.get(1)
+            val nodeX = csvRecord.get(2)
+            val nodeY = csvRecord.get(3)
+            tree.add(nodeKey.toInt(), nodeValue)
+        }
     }
 }
