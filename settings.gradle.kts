@@ -9,3 +9,10 @@
 
 rootProject.name = "trees-9"
 include("app")
+
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+    }
+}
