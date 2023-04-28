@@ -4,11 +4,14 @@ plugins {
     jacoco
     // Apply the application plugin to add support for building a CLI application in Java.
     application
+    id("org.jetbrains.compose") version "1.4.0"
 }
 
 repositories {
     // Use Maven Central for resolving dependencies.
     mavenCentral()
+    maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+    google()
 }
 
 dependencies {
@@ -26,6 +29,8 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
 
     implementation("org.xerial:sqlite-jdbc:3.14.2")
+    implementation(compose.material3)
+    implementation(compose.desktop.currentOs)
 
     // Logging
     implementation("io.github.microutils:kotlin-logging-jvm:2.0.6")

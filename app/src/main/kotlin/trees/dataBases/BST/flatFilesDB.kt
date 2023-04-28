@@ -8,13 +8,13 @@ import trees.nodes.BSNode
 import java.io.File
 
 const val fileName = "./app/src/main/kotlin/trees/dataBases/BST/flatFile"
-val file = File(fileName)
+val curFile = File(fileName)
 
 fun checkIfFileExist(file: File): Boolean {
     return file.exists()
 }
 
-fun removeFile(file: File): Boolean {
+fun removeFile(file: File = curFile): Boolean {
     if (checkIfFileExist(file)) {
         var result = file.delete()
         if (result) {
@@ -29,7 +29,7 @@ fun removeFile(file: File): Boolean {
     throw Exception("File with tree not exist")
 }
 
-fun writeAllNodesToFile(node: BSNode<Int, String>?, tree: BSTree<Int, String>, file: File) {
+fun writeAllNodesToFile(node: BSNode<Int, String>?, tree: BSTree<Int, String>, file: File = File(fileName)) {
     val stack = mutableListOf(node?.key)
     file.bufferedWriter().use {
         val csvPrinter = CSVPrinter(it, CSVFormat.DEFAULT)
@@ -39,20 +39,20 @@ fun writeAllNodesToFile(node: BSNode<Int, String>?, tree: BSTree<Int, String>, f
                 current.left?.key.apply(stack::add)
             if (current?.right != null)
                 current.right?.key.apply(stack::add)
-            csvPrinter.printRecord("${current?.key}","${current?.value}","0","0")
+            csvPrinter.printRecord("${current?.key}","${current?.value}")
         }
     }
 }
 
-fun insertAllNodesToTree(tree: BSTree<Int, String>, file: File) {
+fun insertAllNodesToTree(file: File = curFile): BSTree<Int, String> {
+    val tree = BSTree<Int, String>()
     file.bufferedReader ().use {
         val csvParser = CSVParser(it, CSVFormat.DEFAULT)
         for(csvRecord in csvParser) {
             val nodeKey = csvRecord.get(0)
             val nodeValue = csvRecord.get(1)
-            val nodeX = csvRecord.get(2)
-            val nodeY = csvRecord.get(3)
             tree.add(nodeKey.toInt(), nodeValue)
         }
     }
+    return tree
 }
