@@ -29,11 +29,12 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
 
     implementation("org.xerial:sqlite-jdbc:3.14.2")
+    implementation(compose.material3)
+    implementation(compose.desktop.currentOs)
 
     // Logging
     implementation("io.github.microutils:kotlin-logging-jvm:2.0.6")
     implementation("org.slf4j:slf4j-simple:1.7.29")
-    implementation(compose.desktop.currentOs)
 }
 
 tasks.test {
