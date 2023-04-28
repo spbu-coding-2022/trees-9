@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.sp
 import kotlin.system.exitProcess
 
 @Composable
-fun homeScreen() {
+fun homeScreen(toBST: () -> Unit) {
     val fontsize = 22
     val buttonWidth = 225
     Column(
@@ -23,11 +23,7 @@ fun homeScreen() {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Button(
-            onClick = {
-                TODO("TreeScreen")
-//                BSTScreen()
-            }) {
+        Button(onClick = toBST) {
             Text(
                 text = "Binary search tree",
                 modifier = Modifier.width(buttonWidth.dp),
