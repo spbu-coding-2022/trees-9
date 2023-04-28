@@ -18,7 +18,7 @@ import trees.dataBases.BST.writeAllNodesToFile
 import trees.gui.printNode
 
 @Composable
-fun BSTScreen() {
+fun BSTScreen(toMenu: () -> Unit) {
     val tree = insertAllNodesToTree()
     val node = tree.root
     val stack = mutableListOf(node?.key)
@@ -43,7 +43,7 @@ fun BSTScreen() {
             }) {
             Text(
                 text = "Save tree",
-                modifier = Modifier.width(250.dp),
+                modifier = Modifier.width(150.dp),
                 fontSize = 16.sp,
                 textAlign = TextAlign.Center
             )
@@ -53,8 +53,19 @@ fun BSTScreen() {
                 removeFile()
             }) {
             Text(
-                text = "Remove BD file",
-                modifier = Modifier.width(250.dp),
+                text = "Clear DB file",
+                modifier = Modifier.width(150.dp),
+                fontSize = 16.sp,
+                textAlign = TextAlign.Center
+            )
+        }
+        Button(
+            onClick = {
+                    toMenu()
+            }) {
+            Text(
+                text = "Back to menu",
+                modifier = Modifier.width(150.dp),
                 fontSize = 16.sp,
                 textAlign = TextAlign.Center
             )

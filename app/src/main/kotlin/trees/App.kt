@@ -24,7 +24,7 @@ fun main() = application {
                 homeScreen(toBST = { screenState = Screen.BSTScreen })
 
             is Screen.BSTScreen ->
-                BSTScreen()
+                BSTScreen(toMenu = { screenState = Screen.homeScreen})
         }
     }
 }   
