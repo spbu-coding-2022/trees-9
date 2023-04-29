@@ -41,19 +41,7 @@ class RBTree<K : Comparable<K>, V> : BalanceTree<K, V, RBNode<K, V>>() {
     }
 
     override fun remove(key: K) {
-        var current = root
-
-        while (current != null && current.key != key) {
-            current = if (key < current.key) {
-                current.left
-            } else {
-                current.right
-            }
-        }
-
-        if (current == null) {
-            throw IllegalStateException("There is no such node with key $key in the tree")
-        }
+        val current = find(key) ?: throw IllegalStateException("There is no such node with key $key in the tree")
 
         val movedUpNode: RBNode<K, V>?
         val deletedNodeColor: Color
@@ -82,13 +70,13 @@ class RBTree<K : Comparable<K>, V> : BalanceTree<K, V, RBNode<K, V>>() {
         }
     }
 
-    override fun balance(node: RBNode<K, V>, afterRemove: Boolean): RBNode<K, V>? {
+    override fun balance(node: RBNode<K, V>, afterRemove: Boolean): RBNode<K, V> {
         if (afterRemove) {
             balanceAfterRemove(node)
         } else {
             balanceAfterAdd(node)
         }
-        return null
+        return node
     }
 
     private fun balanceAfterAdd(node: RBNode<K, V>) {
@@ -234,7 +222,7 @@ class RBTree<K : Comparable<K>, V> : BalanceTree<K, V, RBNode<K, V>>() {
         } else {
             node.isTemp = true
             var newChild: RBNode<K, V>? = node
-            
+
             if (node.color == Color.RED) {
                 newChild = null
             }
