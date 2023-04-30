@@ -25,22 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.modifier.modifierLocalMapOf
 
 @Composable
-fun BSTScreen(toMenu: () -> Unit) {
-    val tree = insertAllNodesToTree()
-//    val tree = BSTree<Int, String>()
-//    tree.root = BSNode(123, "717.875;217.375;.25;dsfsafds")
-//    tree.root?.left = BSNode(75, "633.625;481.875;875;kkdks")
-//    tree.root?.right = BSNode(3459, "222.388;486.055;18;1asdf")
-    val node = tree.root
-    val stack = mutableListOf(node?.key)
-    while (stack.isNotEmpty()) {
-        val current = stack.removeLast()?.let { current -> tree.find(current) }
-        if (current?.left != null)
-            current.left?.key.apply(stack::add)
-        if (current?.right != null)
-            current.right?.key.apply(stack::add)
-        current?.let { printNode(it) }
-    }
+fun AVLScreen(toMenu: () -> Unit) {
     Box() {
         Column(
             Modifier.padding(10.dp, 10.dp, 0.dp, 0.dp).background(Color.Unspecified).shadow(1.dp),
@@ -91,8 +76,6 @@ fun BSTScreen(toMenu: () -> Unit) {
             ) {
                 Button(
                     onClick = {
-                        removeFile()
-                        writeAllNodesToFile(tree.root, tree)
                     }) {
                     Text(
                         text = "Save tree",
@@ -103,7 +86,6 @@ fun BSTScreen(toMenu: () -> Unit) {
                 }
                 Button(
                     onClick = {
-                        removeFile()
                     }) {
                     Text(
                         text = "Clear DB file",

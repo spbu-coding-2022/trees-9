@@ -15,7 +15,11 @@ import androidx.compose.ui.unit.sp
 import kotlin.system.exitProcess
 
 @Composable
-fun homeScreen(toBST: () -> Unit) {
+fun homeScreen(
+    toBST: () -> Unit,
+    toAVL: () -> Unit,
+    toRB: () -> Unit
+) {
     val fontsize = 22
     val buttonWidth = 225
     Column(
@@ -31,10 +35,7 @@ fun homeScreen(toBST: () -> Unit) {
                 textAlign = TextAlign.Center
             )
         }
-        Button(
-            onClick = {
-                TODO("TreeScreen")
-            }) {
+        Button(onClick = toAVL) {
             Text(
                 text = "AVL tree",
                 modifier = Modifier.width(buttonWidth.dp),
@@ -42,10 +43,7 @@ fun homeScreen(toBST: () -> Unit) {
                 textAlign = TextAlign.Center
             )
         }
-        Button(
-            onClick = {
-                TODO("TreeScreen")
-            }) {
+        Button(onClick = toRB) {
             Text(
                 text = "Red-black tree",
                 modifier = Modifier.width(buttonWidth.dp),
