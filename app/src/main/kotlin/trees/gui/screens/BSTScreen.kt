@@ -23,24 +23,58 @@ import trees.gui.printNode
 import trees.nodes.BSNode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.modifier.modifierLocalMapOf
+import trees.gui.printLine
+
+fun getX(node: BSNode<Int, String>): Float {
+    return node.value.split(";")[0].toFloat()
+}
+
+fun getY(node: BSNode<Int, String>): Float {
+    return node.value.split(";")[1].toFloat()
+}
+
+fun newXY(node: BSNode<Int, String>, x: Float, y: Float) {
+    var count = 0
+    var value = ""
+    for(i in 0..node.value.length - 1) {
+        if (node.value[i] == ';') {
+            count++
+        }
+        if (count == 2) {
+            value += node.value[i]
+        }
+    }
+    node.value = x.toString() + ";" + y.toString() + ";" + value
+}
+
+@Composable
+fun drawTree(node: BSNode<Int, String>?, parent: BSNode<Int, String>?, size: Int) {
+    if (node != null) {
+        if (parent != null && (parent.right == node)) {
+            newXY(node, getX(parent)+ size, getY(parent) + size)
+        }
+        if (parent != null && (parent.left == node)) {
+            newXY(node, getX(parent) - size, getY(parent) + size)
+        }
+        parent?.let { printLine(it, node) }
+        printNode(node)
+        drawTree(node.left, node, size)
+        drawTree(node.right, node, size)
+    }
+}
 
 @Composable
 fun BSTScreen(toMenu: () -> Unit) {
     val tree = insertAllNodesToTree()
-//    val tree = BSTree<Int, String>()
-//    tree.root = BSNode(123, "717.875;217.375;.25;dsfsafds")
-//    tree.root?.left = BSNode(75, "633.625;481.875;875;kkdks")
-//    tree.root?.right = BSNode(3459, "222.388;486.055;18;1asdf")
-    val node = tree.root
-    val stack = mutableListOf(node?.key)
-    while (stack.isNotEmpty()) {
-        val current = stack.removeLast()?.let { current -> tree.find(current) }
-        if (current?.left != null)
-            current.left?.key.apply(stack::add)
-        if (current?.right != null)
-            current.right?.key.apply(stack::add)
-        current?.let { printNode(it) }
-    }
+//    tree.root?.left?.left = BSNode(73, "633.625;481.875;875;kkdks")
+//    tree.root?.left?.left?.right = BSNode(74, "633.625;481.875;875;kkdks")
+//    tree.root?.right?.right = BSNode(3465, "222.388;486.055;18;1asdf")
+//    tree.root?.right?.right?.left = BSNode(3464, "222.388;486.055;18;1asdf")
+//    tree.root?.right?.left = BSNode(3457, "222.388;486.055;18;1asdf")
+//    tree.root?.right?.left?.right = BSNode(3458, "222.388;486.055;18;1asdf")
+//    tree.root?.right?.left?.right?.right = BSNode(4500, "222.388;486.055;18;1asdf")
+    drawTree(tree.root, null, 70)
+
     Box() {
         Column(
             Modifier.padding(10.dp, 10.dp, 0.dp, 0.dp).background(Color.Unspecified).shadow(1.dp),
