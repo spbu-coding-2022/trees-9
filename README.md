@@ -5,9 +5,8 @@ A project created to study the mechanics of AVL, Red-Black and BST trees, unit t
 
 - [Download and build](#download-and-build)
 - [Trees](#trees)
-    - [Unit tests](#unit-tests)
+    - [Unit tests](#unit-tests-by-junit-5)
     - [Databases](#databases)
-    - [Future](#future)
 - [Authors](#authors)
 
 ## Download and build:
@@ -28,18 +27,24 @@ Implemented 3 basic tree:
 
 Each tree support add, remove, find and print functions.
 Node consist of **comparable** key and value
-
-*Attention: undefined behavior when adding more than 100000 values*
 ## Unit tests (by [JUnit 5](https://junit.org/junit5/))
 Tests aimed at checking different cases:
 - Find existing and not existing nodes
 - Add up to 10000 nodes
+- Special cases of balancing
 - Remove existing and not existing nodes
 
 For all trees, the corresponding validator is implemented
 
+Test coverage by Intellej IDEA:
+| Tree    | Methods %  | Lines % |
+| ------------------- |:---:|:--:|
+| Binary search tree  | 100 | 96 |
+| AVL tree            | 100 | 98 |
+| Reb-Black tree      | 100 | 93 |
+
 ## Databases
-Binary search tree mapped to flat file database, AVL mapped to sqlite
+Databases created to store tree nodes
 
 Capability:
 - Insert all nodes to tree
@@ -47,16 +52,9 @@ Capability:
 - Delete itself
 
 *It's okey if*: relationships of nodes changed when the application is restarted
-### Future:
-- Neo4j database to store red-black tree (in progress)
-- GUI support
-- CONTRIBUTING.md
  
 
 ## Authors
 - gladiuswq - [github](https://github.com/gladiuswq), [contact](https://t.me/gladiuswq)  
 - raf-nr - [github](https://github.com/raf-nr), [contact](https://t.me/nrrafik)  
 - vacmannnn - [github](https://github.com/vacmannnn), [contact](https://t.me/vacmannnn) 
-
-
-
