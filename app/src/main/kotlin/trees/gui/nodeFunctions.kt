@@ -22,13 +22,26 @@ import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
-import trees.gui.screens.getX
-import trees.gui.screens.getY
+import trees.nodes.AVLNode
 import trees.nodes.BSNode
 import kotlin.math.roundToInt
 
 fun getParent(key: Int, rootNode: BSNode<Int, String>): BSNode<Int, String> {
     var current: BSNode<Int, String> = rootNode
+    while (current.left?.key != key && current.right?.key != key) {
+        println("${current.key} $key ${current.right?.key} ${current.left?.key}")
+        current = when {
+            current.key < key -> current.right!!
+            current.key > key -> current.left!!
+            else -> return current
+        }
+    }
+    return current
+}
+
+fun getAVLParent(key: Int, rootNode: AVLNode<Int, String>): AVLNode<Int, String> {
+    // Functions will be merged in the future.
+    var current: AVLNode<Int, String> = rootNode
     while (current.left?.key != key && current.right?.key != key) {
         println("${current.key} $key ${current.right?.key} ${current.left?.key}")
         current = when {
@@ -76,6 +89,51 @@ fun printLine(start: BSNode<Int, String>, end: BSNode<Int, String>, marker: Bool
             )
         }
     }
+}
+
+@Composable
+fun printLine(start: AVLNode<Int, String>, end: AVLNode<Int, String>, marker: Boolean) {
+    // Functions will be merged in the future.
+
+    //If marker is true then draw left, else draw ridth
+    val x0 = getX(start).dp
+    val y0 = getY(start).dp
+    val x1 = getX(end).dp
+    val y1 = getY(end).dp
+
+    if (marker == true) {
+        Box(modifier = Modifier.offset(x0 + (0.4 * 25).dp, y0 + ((1.82*25).dp))) {
+            Box(
+                modifier = Modifier.size(x1 - x0, y1 - y0)
+                    .drawBehind { drawLine(Color.Black, Offset.Zero, Offset((x1 - x0).toPx(), (y1 - y0).toPx()), 4f) }
+            )
+        }
+    } else {
+        Box(modifier = Modifier.offset(x0 + (1.82*25).dp, y0 + ((1.82*25).dp))) {
+            Box(
+                modifier = Modifier.size(x1 - x0, y1 - y0)
+                    .drawBehind { drawLine(Color.Black, Offset.Zero, Offset((x1 - x0).toPx(), (y1 - y0).toPx()), 4f) }
+            )
+        }
+    }
+}
+
+fun getX(node: BSNode<Int, String>): Float {
+    return node.value.split(";")[0].toFloat()
+}
+
+fun getY(node: BSNode<Int, String>): Float {
+    return node.value.split(";")[1].toFloat()
+}
+
+fun getX(node: AVLNode<Int, String>): Float {
+    // Functions will be merged in the future.
+    return node.value.split(";")[0].toFloat()
+}
+
+fun getY(node: AVLNode<Int, String>): Float {
+    // Functions will be merged in the future.
+    return node.value.split(";")[1].toFloat()
 }
 
 class Coordinate(
