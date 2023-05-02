@@ -29,6 +29,7 @@ import trees.gui.printNode
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.modifier.modifierLocalMapOf
 import trees.gui.printLine
+import trees.nodes.BSNode
 
 fun getX(node: BSNode<Int, String>): Float {
     return node.value.split(";")[0].toFloat()
