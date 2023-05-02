@@ -12,7 +12,7 @@ private const val DB_DRIVER = "jdbc:sqlite"
 class SQLiteDB(private val path: String) : Closeable {
     private val connection = DriverManager.getConnection("$DB_DRIVER:$path")
         ?: throw SQLException("Cannot connect to database")
-    private val addNodeStatement by lazy { connection.prepareStatement("INSERT INTO nodes(key, value, x, y) VALUES (?, ?, ?, ?);") }
+    private val addNodeStatement by lazy { connection.prepareStatement("INSERT INTO nodes(key, value) VALUES (?, ?);") }
 
     init {
         logger.info { "Connected to database: $path" }
@@ -21,7 +21,7 @@ class SQLiteDB(private val path: String) : Closeable {
     fun open() {
         connection.createStatement().also { statement ->
             try {
-                statement.execute("CREATE TABLE IF NOT EXISTS nodes(key INTEGER NOT NULL PRIMARY KEY, value text, x FLOAT NOT NULL, y FLOAT NOT NULL);")
+                statement.execute("CREATE TABLE IF NOT EXISTS nodes(key INTEGER NOT NULL PRIMARY KEY, value text);")
                 logger.info { "Tables created or already exists" }
             } catch (problem: Exception) {
                 logger.error(problem) { "Cannot create table in database" }
