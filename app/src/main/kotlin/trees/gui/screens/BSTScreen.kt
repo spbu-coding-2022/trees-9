@@ -32,6 +32,7 @@ var enteredKey: String = ""
 @Composable
 fun BSTScreen(toMenu: () -> Unit) {
     val tree = remember { mutableStateOf(BSTree<Int, String>()) }
+    var textMessage by remember { mutableStateOf(mutableListOf<String>()) }
     var screenReload by remember { mutableStateOf(false) }
     if (screenReload) {
         screenReload = false
@@ -85,27 +86,32 @@ fun BSTScreen(toMenu: () -> Unit) {
                         Button(
                             onClick = {
                                 findMode = false
-                                var coordinate = Coordinate(0f, 0f)
-                                var parent = BSNode(0, "")
-                                var value =
-                                    settingValue(enteredValue, coordinate.x + 50.0f, coordinate.y + .0f, 0, false)
-                                var curNode = BSNode(enteredKey.toInt(), value)
-                                tree.value.add(curNode.key, curNode.value)
-                                if (tree.value.root?.key != enteredKey.toInt()) {
-                                    parent = getParent(enteredKey.toInt(), tree.value.root!!)
-                                    coordinate = getCoordinate(parent.value)
-                                    println("${coordinate.x} ${coordinate.y}")
+                                try {
+                                    textMessage = mutableListOf("")
+                                    var coordinate = Coordinate(0f, 0f)
+                                    var parent = BSNode(0, "")
+                                    var value =
+                                        settingValue(enteredValue, coordinate.x + 50.0f, coordinate.y + .0f, 0, false)
+                                    var curNode = BSNode(enteredKey.toInt(), value)
+                                    tree.value.add(curNode.key, curNode.value)
+                                    if (tree.value.root?.key != enteredKey.toInt()) {
+                                        parent = getParent(enteredKey.toInt(), tree.value.root!!)
+                                        coordinate = getCoordinate(parent.value)
+                                        println("${coordinate.x} ${coordinate.y}")
+                                    }
+                                    val point = findBracketPoint(value)
+                                    val offset = 85f
+                                    value = if (parent.left?.key == enteredKey.toInt()) {
+                                        settingValue(value, coordinate.x - offset, coordinate.y + offset, point, true)
+                                    } else {
+                                        settingValue(value, coordinate.x + offset, coordinate.y + offset, point, true)
+                                    }
+                                    curNode = BSNode(enteredKey.toInt(), value)
+                                    tree.value.add(curNode.key, curNode.value)
+                                    screenReload = true
+                                } catch (_: NumberFormatException) {
+                                    textMessage = mutableListOf("Write number as a key")
                                 }
-                                val point = findBracketPoint(value)
-                                val offset = 85f
-                                value = if (parent.left?.key == enteredKey.toInt()) {
-                                    settingValue(value, coordinate.x - offset, coordinate.y + offset, point, true)
-                                } else {
-                                    settingValue(value, coordinate.x + offset, coordinate.y + offset, point, true)
-                                }
-                                curNode = BSNode(enteredKey.toInt(), value)
-                                tree.value.add(curNode.key, curNode.value)
-                                screenReload = true
                             },
                         ) {
                             Text(
@@ -117,11 +123,14 @@ fun BSTScreen(toMenu: () -> Unit) {
                         }
                         Button(
                             onClick = {
-                                if (findMode) {
-                                    findMode = false
+                                findMode = false
+                                try {
+                                    textMessage = mutableListOf("")
+                                    tree.value.remove(enteredKey.toInt())
+                                    screenReload = true
+                                } catch (_: NumberFormatException) {
+                                    textMessage = mutableListOf("Node with this key doesn't exist")
                                 }
-                                tree.value.remove(enteredKey.toInt())
-                                screenReload = true
                             }) {
                             Text(
                                 text = "Remove node",
@@ -132,6 +141,7 @@ fun BSTScreen(toMenu: () -> Unit) {
                         }
                         Button(
                             onClick = {
+                                textMessage = mutableListOf("Write key that you are looking for")
                                 findMode = !findMode
                                 screenReload = true
                             }) {
@@ -200,6 +210,7 @@ fun BSTScreen(toMenu: () -> Unit) {
                                 .padding(vertical = 5.dp),
                             value = key,
                             onValueChange = {
+                                textMessage = mutableListOf("")
                                 key = it
                                 enteredKey = it
                             },
@@ -219,6 +230,15 @@ fun BSTScreen(toMenu: () -> Unit) {
                             label = { Text("Enter value", textAlign = TextAlign.Center) }
                         )
                     }
+                    val text = textMessage.toString().slice(1 until textMessage.toString().length - 1)
+                    Text(
+                        text = text,
+                        fontSize = 18.sp,
+                        modifier = Modifier
+                            .offset((10).dp, (-55).dp)
+                            .width(150.dp),
+                        textAlign = TextAlign.Center,
+                    )
                 }
             }
         }
