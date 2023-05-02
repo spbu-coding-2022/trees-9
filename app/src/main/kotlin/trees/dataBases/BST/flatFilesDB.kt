@@ -10,26 +10,15 @@ import java.io.File
 const val fileName = "./app/src/main/kotlin/trees/dataBases/BST/flatFile"
 val curFile = File(fileName)
 
-fun checkIfFileExist(file: File): Boolean {
-    return file.exists()
-}
-
-fun removeFile(file: File = curFile): Boolean {
-    if (checkIfFileExist(file)) {
-        var result = file.delete()
-        if (result) {
-            result = file.createNewFile()
-            if (result) {
-                return result
-            }
-            throw Exception("Fail with file create")
-        }
-        throw Exception("Fail with file remove")
-    }
-    throw Exception("File with tree not exist")
+fun removeFile(file: File = curFile) {
+    file.delete()
+    file.createNewFile()
 }
 
 fun writeAllNodesToFile(node: BSNode<Int, String>?, tree: BSTree<Int, String>, file: File = File(fileName)) {
+    if (!file.exists()) {
+        file.createNewFile()
+    }
     val stack = mutableListOf(node?.key)
     file.bufferedWriter().use {
         val csvPrinter = CSVPrinter(it, CSVFormat.DEFAULT)
@@ -45,6 +34,9 @@ fun writeAllNodesToFile(node: BSNode<Int, String>?, tree: BSTree<Int, String>, f
 }
 
 fun insertAllNodesToTree(file: File = curFile): BSTree<Int, String> {
+    if (!file.exists()) {
+        file.createNewFile()
+    }
     val tree = BSTree<Int, String>()
     file.bufferedReader ().use {
         val csvParser = CSVParser(it, CSVFormat.DEFAULT)
