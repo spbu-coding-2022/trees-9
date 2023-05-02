@@ -12,7 +12,7 @@ private const val DB_DRIVER = "jdbc:sqlite"
 class SQLiteDB(private val path: String) : Closeable {
     private val connection = DriverManager.getConnection("$DB_DRIVER:$path")
         ?: throw SQLException("Cannot connect to database")
-    private val addNodeStatement by lazy { connection.prepareStatement("INSERT INTO nodes (key, value, x, y) VALUES (?, ?, ?, ?);") }
+    private val addNodeStatement by lazy { connection.prepareStatement("INSERT INTO nodes(key, value) VALUES (?, ?);") }
 
     init {
         logger.info { "Connected to database: $path" }
@@ -21,10 +21,9 @@ class SQLiteDB(private val path: String) : Closeable {
     fun open() {
         connection.createStatement().also { statement ->
             try {
-                statement.execute("CREATE TABLE IF NOT EXISTS nodes(key INTEGER NOT NULL PRIMARY KEY, value text, x DOUBLE NOT NULL, y DOUBLE NOT NULL);")
+                statement.execute("CREATE TABLE IF NOT EXISTS nodes(key INTEGER NOT NULL PRIMARY KEY, value text);")
                 logger.info { "Tables created or already exists" }
             } catch (problem: Exception) {
-                println(problem)
                 logger.error(problem) { "Cannot create table in database" }
             } finally {
                 statement.close()
@@ -36,8 +35,6 @@ class SQLiteDB(private val path: String) : Closeable {
         try {
             addNodeStatement.setInt(1, node.key)
             addNodeStatement.setString(2, node.value)
-            addNodeStatement.setDouble(3, 0.0)
-            addNodeStatement.setDouble(4, 0.0)
             addNodeStatement.execute()
         } catch (problem: Exception) {
             logger.error(problem) { "Cannot add node with key ${node.key}" }
@@ -59,12 +56,13 @@ class SQLiteDB(private val path: String) : Closeable {
     fun selectNodes(): MutableList<AVLNode<Int, String>> {
         val nodesList = mutableListOf<AVLNode<Int, String>>()
         try {
-            val query = "SELECT key, value, x, y FROM nodes"
+            val query = "SELECT key, value FROM nodes"
             val rs = connection.createStatement().executeQuery(query)
             while (rs.next()) {
                 val key = rs.getInt("key")
                 val value = rs.getString("value")
-                nodesList.add(AVLNode(key, value))
+                var node = AVLNode(key,value)
+                nodesList.add(node)
             }
         } catch (problem: Exception) {
             logger.error(problem) { "Failed to select" }
@@ -80,6 +78,8 @@ class SQLiteDB(private val path: String) : Closeable {
             } catch (problem: Exception) {
                 println(problem)
                 logger.error(problem) { "Cannot delete table in database" }
+            }  finally {
+                statement.close()
             }
         }
     }

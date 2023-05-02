@@ -2,7 +2,7 @@ package trees.gui.model
 
 import trees.nodes.Node
 
-class NodeView<NT: Node<Int, String?, NT>>(parNode: NT) {
+class NodeView<NT : Node<Int, String?, NT>>(parNode: NT) {
     var node = parNode
     val x = 0.0
     val y = 0.0

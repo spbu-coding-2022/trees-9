@@ -12,11 +12,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.PointerEventType
+import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import trees.gui.screens.getX
@@ -24,15 +27,30 @@ import trees.gui.screens.getY
 import trees.nodes.BSNode
 import kotlin.math.roundToInt
 
-fun settingValue(value: String, x: Float, y: Float, isNotFirst: Boolean): String {
-    val roundedX = (x * 1000).roundToInt() / 1000.0f
-    val roundedY = (y * 1000).roundToInt() / 1000.0f
-    if (isNotFirst) {
-        val pointsLenSize = roundedX.toString().length + roundedY.toString().length + 2
-        return roundedX.toString() + ';' + roundedY.toString() + ';' + value.slice(pointsLenSize until value.length)
-    } else {
-        return "$roundedX;$roundedY;$value"
+fun getParent(key: Int, rootNode: BSNode<Int, String>): BSNode<Int, String> {
+    var current: BSNode<Int, String> = rootNode
+    while (current.left?.key != key && current.right?.key != key) {
+        println("${current.key} $key ${current.right?.key} ${current.left?.key}")
+        current = when {
+            current.key < key -> current.right!!
+            current.key > key -> current.left!!
+            else -> return current
+        }
     }
+    return current
+}
+
+fun findBracketPoint(value: String): Int {
+    var count = 0
+    for (i in value.indices) {
+        if (value[i] == ';') {
+            count++
+        }
+        if (count == 2) {
+            return i
+        }
+    }
+    return 0
 }
 
 @Composable
@@ -60,30 +78,76 @@ fun printLine(start: BSNode<Int, String>, end: BSNode<Int, String>, marker: Bool
     }
 }
 
-@Composable
-fun printNode(node: BSNode<Int, String>) {
-    var p = 0
-    var p1 = 0
-    for (i in 0 until node.value.length) {
-        if (node.value[i] == ';') {
-            p = i
+class Coordinate(
+    var x: Float,
+    var y: Float
+)
+
+fun getCoordinate(value: String): Coordinate {
+    var pointerToBracket1 = 0
+    var pointerToBracket2 = 0
+    for (i in value.indices) {
+        if (value[i] == ';') {
+            pointerToBracket1 = i
             break
         }
     }
-    for (i in p + 1 until node.value.length) {
+    for (i in pointerToBracket1 + 1 until value.length) {
+        if (value[i] == ';') {
+            pointerToBracket2 = i
+            break
+        }
+    }
+    val x = value.slice(0 until pointerToBracket1).toFloat()
+    val y = value.slice(pointerToBracket1 + 1 until pointerToBracket2).toFloat()
+    return Coordinate(x, y)
+}
+
+fun settingValue(value: String, x: Float, y: Float, pointerToValue: Int, isNotFirst: Boolean): String {
+    val roundedX = (x * 1000).roundToInt() / 1000.0f
+    val roundedY = (y * 1000).roundToInt() / 1000.0f
+    if (isNotFirst) {
+        return roundedX.toString() + ';' + roundedY.toString() + ';' + value.slice(pointerToValue + 1 until value.length)
+    } else {
+        return "$roundedX;$roundedY;$value"
+    }
+}
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun printNode(node: BSNode<Int, String>, difColour: Boolean = false) {
+    var p1 = 0
+    var p2 = 0
+    for (i in node.value.indices) {
         if (node.value[i] == ';') {
             p1 = i
             break
         }
     }
-    val x = remember { mutableStateOf((node.value.slice(0 until p).toFloat()).dp) }
-    val y = remember { mutableStateOf((node.value.slice(p + 1 until p1).toFloat()).dp) }
+    for (i in p1 + 1 until node.value.length) {
+        if (node.value[i] == ';') {
+            p2 = i
+            break
+        }
+    }
+    val coordinate = getCoordinate(node.value)
+    val x = remember(node.key) { mutableStateOf((coordinate.x).dp) }
+    val y = remember(node.key) { mutableStateOf((coordinate.y).dp) }
+    val valueToPrint = node.value.slice(p2 + 1 until node.value.length)
+    val color = if (difColour) {
+        Color.Green
+    } else {
+        Color.Red
+    }
     Box(modifier = Modifier.offset((x.value), (y.value))) {
         Box(
             modifier = Modifier
                 .requiredSize(54.dp)
                 .clip(CircleShape)
-                .background(Color.Red),
+                .background(color)
+                .onPointerEvent(eventType = PointerEventType.Release) {
+                    node.value = settingValue(node.value, x.value.value, y.value.value, p2, true)
+                },
             contentAlignment = Alignment.Center
         ) {
             Text("${node.key}")

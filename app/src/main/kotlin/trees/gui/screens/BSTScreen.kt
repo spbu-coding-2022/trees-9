@@ -1,19 +1,23 @@
 package trees.gui.screens
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.ui.draw.clip
+import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -21,6 +25,8 @@ import trees.BSTree
 import trees.dataBases.BST.insertAllNodesToTree
 import trees.dataBases.BST.removeFile
 import trees.dataBases.BST.writeAllNodesToFile
+import trees.gui.*
+import trees.nodes.BSNode
 import trees.gui.printNode
 import trees.nodes.BSNode
 import androidx.compose.ui.graphics.Color
@@ -71,13 +77,6 @@ fun drawTree(node: BSNode<Int, String>?, parent: BSNode<Int, String>?, size: Int
 @Composable
 fun BSTScreen(toMenu: () -> Unit) {
     val tree = insertAllNodesToTree()
-//    tree.root?.left?.left = BSNode(73, "633.625;481.875;875;kkdks")
-//    tree.root?.left?.left?.right = BSNode(74, "633.625;481.875;875;kkdks")
-//    tree.root?.right?.right = BSNode(3465, "222.388;486.055;18;1asdf")
-//    tree.root?.right?.right?.left = BSNode(3464, "222.388;486.055;18;1asdf")
-//    tree.root?.right?.left = BSNode(3457, "222.388;486.055;18;1asdf")
-//    tree.root?.right?.left?.right = BSNode(3458, "222.388;486.055;18;1asdf")
-//    tree.root?.right?.left?.right?.right = BSNode(4500, "222.388;486.055;18;1asdf")
     drawTree(tree.root, null, 70)
 
     Box() {
