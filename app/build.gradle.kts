@@ -1,30 +1,33 @@
 plugins {
-    // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
     id("org.jetbrains.kotlin.jvm") version "1.8.10"
     jacoco
     // Apply the application plugin to add support for building a CLI application in Java.
     application
+    id("org.jetbrains.compose") version "1.4.0"
 }
 
 repositories {
-    // Use Maven Central for resolving dependencies.
     mavenCentral()
+    maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+    google()
 }
 
 dependencies {
-    // Use the Kotlin JUnit 5 integration.
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 
-    // Use the JUnit 5 integration.
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.1")
 
     // This dependency is used by the application.
+    implementation ("org.apache.commons:commons-csv:1.5")
     implementation("com.google.guava:guava:31.1-jre")
+    implementation("org.neo4j.driver", "neo4j-java-driver", "5.7.0")
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
 
     implementation("org.xerial:sqlite-jdbc:3.14.2")
+    implementation(compose.material3)
+    implementation(compose.desktop.currentOs)
 
     // Logging
     implementation("io.github.microutils:kotlin-logging-jvm:2.0.6")
