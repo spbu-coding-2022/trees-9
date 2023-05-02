@@ -32,28 +32,6 @@ import androidx.compose.ui.modifier.modifierLocalMapOf
 import trees.gui.printLine
 import trees.nodes.BSNode
 
-fun getX(node: BSNode<Int, String>): Float {
-    return node.value.split(";")[0].toFloat()
-}
-
-fun getY(node: BSNode<Int, String>): Float {
-    return node.value.split(";")[1].toFloat()
-}
-
-fun newXY(node: BSNode<Int, String>, x: Float, y: Float) {
-    var count = 0
-    var value = ""
-    for(i in 0..node.value.length - 1) {
-        if (node.value[i] == ';') {
-            count++
-        }
-        if (count == 2) {
-            value += node.value[i]
-        }
-    }
-    node.value = x.toString() + ";" + y.toString() + ";" + value
-}
-
 var treeInit = false
 var findMode = false
 var enteredValue: String = ""
@@ -63,8 +41,6 @@ var enteredKey: String = ""
 @Preview
 @Composable
 fun BSTScreen(toMenu: () -> Unit) {
-//    val tree = insertAllNodesToTree()
-//    drawTree(tree.root, null, 70)
     val tree = remember { mutableStateOf(BSTree<Int, String>()) }
     var textMessage by remember { mutableStateOf(mutableListOf<String>()) }
     var screenReload by remember { mutableStateOf(false) }
@@ -104,6 +80,7 @@ fun BSTScreen(toMenu: () -> Unit) {
             }
         }
     }
+    var dop = 0
     Box {
         Column(
             Modifier.padding(10.dp, 10.dp, 0.dp, 0.dp).background(Color.Unspecified).shadow(1.dp),
@@ -126,7 +103,7 @@ fun BSTScreen(toMenu: () -> Unit) {
                                 findMode = false
                                 try {
                                     textMessage = mutableListOf("")
-                                    var coordinate = Coordinate(0f, 0f)
+                                    var coordinate = Coordinate(850f, 0f)
                                     var parent = BSNode(0, "")
                                     var value =
                                         settingValue(enteredValue, coordinate.x + 50.0f, coordinate.y + .0f, 0, false)
