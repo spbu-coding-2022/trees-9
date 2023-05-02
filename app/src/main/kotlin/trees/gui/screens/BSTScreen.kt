@@ -32,44 +32,27 @@ import androidx.compose.ui.modifier.modifierLocalMapOf
 import trees.gui.printLine
 import trees.nodes.BSNode
 
-// fun getX(node: BSNode<Int, String>): Float {
-//     return node.value.split(";")[0].toFloat()
-// }
+fun getX(node: BSNode<Int, String>): Float {
+    return node.value.split(";")[0].toFloat()
+}
 
-// fun getY(node: BSNode<Int, String>): Float {
-//     return node.value.split(";")[1].toFloat()
-// }
+fun getY(node: BSNode<Int, String>): Float {
+    return node.value.split(";")[1].toFloat()
+}
 
-// fun newXY(node: BSNode<Int, String>, x: Float, y: Float) {
-//     var count = 0
-//     var value = ""
-//    for(i in 0..node.value.length - 1) {
-//         if (node.value[i] == ';') {
-//             count++
-//         }
-//         if (count == 2) {
-//             value += node.value[i]
-//         }
-//     }
-//     node.value = x.toString() + ";" + y.toString() + ";" + value
-// }
-
-// @Composable
-// fun drawTree(node: BSNode<Int, String>?, parent: BSNode<Int, String>?, size: Int) {
-//     if (node != null) {
-//         if (parent != null && (parent.right == node)) {
-//             newXY(node, getX(parent)+ size, getY(parent) + size)
-//             parent?.let { printLine(it, node, false) } // Marker == false, because we draw right line
-//         }
-//         if (parent != null && (parent.left == node)) {
-//             newXY(node, getX(parent) - size, getY(parent) + size)
-//             parent?.let { printLine(it, node, true) } // Marker == true, because we draw left line
-//         }
-//         printNode(node)
-//         drawTree(node.left, node, size)
-//         drawTree(node.right, node, size)
-//     }
-// }
+fun newXY(node: BSNode<Int, String>, x: Float, y: Float) {
+    var count = 0
+    var value = ""
+    for(i in 0..node.value.length - 1) {
+        if (node.value[i] == ';') {
+            count++
+        }
+        if (count == 2) {
+            value += node.value[i]
+        }
+    }
+    node.value = x.toString() + ";" + y.toString() + ";" + value
+}
 
 var treeInit = false
 var findMode = false
