@@ -25,7 +25,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
 
-    implementation("org.xerial:sqlite-jdbc:3.14.2")
+    implementation("org.xerial:sqlite-jdbc:3.41.2.1")
     implementation(compose.material3)
     implementation(compose.desktop.currentOs)
 
