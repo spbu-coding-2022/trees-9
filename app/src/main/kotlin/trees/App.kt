@@ -38,4 +38,4 @@ fun main() = application {
                 RBScreen(toMenu = { screenState = Screen.homeScreen })
         }
     }
-}   
+}

@@ -85,9 +85,10 @@ fun BSTScreen(toMenu: () -> Unit) {
                         Button(
                             onClick = {
                                 findMode = false
-                                var coordinate = Coordinate(0f,0f)
-                                var parent = BSNode(0,"")
-                                var value = settingValue(enteredValue, coordinate.x+50.0f, coordinate.y+.0f, 0, false)
+                                var coordinate = Coordinate(0f, 0f)
+                                var parent = BSNode(0, "")
+                                var value =
+                                    settingValue(enteredValue, coordinate.x + 50.0f, coordinate.y + .0f, 0, false)
                                 var curNode = BSNode(enteredKey.toInt(), value)
                                 tree.value.add(curNode.key, curNode.value)
                                 if (tree.value.root?.key != enteredKey.toInt()) {
@@ -98,9 +99,9 @@ fun BSTScreen(toMenu: () -> Unit) {
                                 val point = findBracketPoint(value)
                                 val offset = 85f
                                 value = if (parent.left?.key == enteredKey.toInt()) {
-                                    settingValue(value, coordinate.x-offset, coordinate.y+offset, point, true)
+                                    settingValue(value, coordinate.x - offset, coordinate.y + offset, point, true)
                                 } else {
-                                    settingValue(value, coordinate.x+offset, coordinate.y+offset, point, true)
+                                    settingValue(value, coordinate.x + offset, coordinate.y + offset, point, true)
                                 }
                                 curNode = BSNode(enteredKey.toInt(), value)
                                 tree.value.add(curNode.key, curNode.value)
@@ -218,7 +219,6 @@ fun BSTScreen(toMenu: () -> Unit) {
                             label = { Text("Enter value", textAlign = TextAlign.Center) }
                         )
                     }
-                    Text("all shit")
                 }
             }
         }
