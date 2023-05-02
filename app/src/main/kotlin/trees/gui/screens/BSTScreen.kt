@@ -55,11 +55,12 @@ fun drawTree(node: BSNode<Int, String>?, parent: BSNode<Int, String>?, size: Int
     if (node != null) {
         if (parent != null && (parent.right == node)) {
             newXY(node, getX(parent)+ size, getY(parent) + size)
+            parent?.let { printLine(it, node, false) } // Marker == false, because we draw right line
         }
         if (parent != null && (parent.left == node)) {
             newXY(node, getX(parent) - size, getY(parent) + size)
+            parent?.let { printLine(it, node, true) } // Marker == true, because we draw left line
         }
-        parent?.let { printLine(it, node) }
         printNode(node)
         drawTree(node.left, node, size)
         drawTree(node.right, node, size)
@@ -86,7 +87,7 @@ fun BSTScreen(toMenu: () -> Unit) {
             horizontalAlignment = Alignment.Start,
         ) {
             Column(
-                Modifier.width(200.dp).height(260.dp).offset(0.dp, 0.dp),
+                Modifier.width(200.dp).height(290.dp).offset(0.dp, 0.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
