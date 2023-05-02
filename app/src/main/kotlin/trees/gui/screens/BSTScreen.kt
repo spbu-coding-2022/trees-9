@@ -30,7 +30,7 @@ var enteredKey: String = ""
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-fun BSTScreen(toMenu: () -> Unit, toBST: () -> Unit) {
+fun BSTScreen(toMenu: () -> Unit) {
     val tree = remember { mutableStateOf(BSTree<Int, String>()) }
     var screenReload by remember { mutableStateOf(false) }
     if (screenReload) {

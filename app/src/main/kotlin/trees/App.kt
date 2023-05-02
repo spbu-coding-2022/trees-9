@@ -29,7 +29,7 @@ fun main() = application {
                     toRB = { screenState = Screen.RBScreen })
 
             is Screen.BSTScreen ->
-                BSTScreen(toMenu = { screenState = Screen.homeScreen }, toBST = { screenState = Screen.BSTScreen })
+                BSTScreen(toMenu = { screenState = Screen.homeScreen })
 
             is Screen.AVLScreen ->
                 AVLScreen(toMenu = { screenState = Screen.homeScreen })
