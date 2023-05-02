@@ -137,7 +137,7 @@ fun printNode(node: BSNode<Int, String>, difColour: Boolean = false) {
     val color = if (difColour) {
         Color.Green
     } else {
-        Color.Red
+        Color.LightGray
     }
     Box(modifier = Modifier.offset((x.value), (y.value))) {
         Box(

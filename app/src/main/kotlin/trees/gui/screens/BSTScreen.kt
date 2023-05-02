@@ -84,14 +84,6 @@ fun BSTScreen(toMenu: () -> Unit) {
         if (current?.right != null)
             current.right?.key.apply(stack::add)
         current?.let {
-            if (findMode && (enteredKey.toIntOrNull() != null) && it.key == enteredKey.toInt() && (tree.value.find(
-                    enteredKey.toInt()
-                ) != null)
-            ) {
-                printNode(it, true)
-            } else {
-                printNode(it)
-            }
             val parent = tree.value.root?.let { it1 -> getParent(it.key, it1) }
             parent?.let { it1 ->
                 if (tree.value.root != it) {
@@ -101,6 +93,14 @@ fun BSTScreen(toMenu: () -> Unit) {
                         printLine(it1, it, false)
                     }
                 }
+            }
+            if (findMode && (enteredKey.toIntOrNull() != null) && it.key == enteredKey.toInt() && (tree.value.find(
+                    enteredKey.toInt()
+                ) != null)
+            ) {
+                printNode(it, true)
+            } else {
+                printNode(it)
             }
         }
     }
