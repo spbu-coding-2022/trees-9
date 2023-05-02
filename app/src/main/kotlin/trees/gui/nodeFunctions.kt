@@ -22,6 +22,8 @@ import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
+import trees.gui.screens.getX
+import trees.gui.screens.getY
 import trees.nodes.BSNode
 import kotlin.math.roundToInt
 
@@ -52,18 +54,25 @@ fun findBracketPoint(value: String): Int {
 }
 
 @Composable
-fun printLine(start: BSNode<Int, String>, end: BSNode<Int, String>) {
-    val coorSt = getCoordinate(start.value)
-    val x0 = coorSt.x.dp
-    val y0 = coorSt.y.dp
-    val coorEn = getCoordinate(end.value)
-    val x1 = coorEn.x.dp
-    val y1 = coorEn.y.dp
-    Box(modifier = Modifier.offset(x0 / 2 + 13.dp, y0 / 2 + 10.dp)) {
-        Box(modifier = Modifier.offset(x0 / 2 + 13.dp, y0 / 2 + 10.dp)) {
+fun printLine(start: BSNode<Int, String>, end: BSNode<Int, String>, marker: Boolean) {
+    //If marker is true then draw left, else draw ridth
+    val x0 = getX(start).dp
+    val y0 = getY(start).dp
+    val x1 = getX(end).dp
+    val y1 = getY(end).dp
+
+    if (marker == true) {
+        Box(modifier = Modifier.offset(x0 + (0.4 * 25).dp, y0 + ((1.82*25).dp))) {
             Box(
                 modifier = Modifier.size(x1 - x0, y1 - y0)
-                    .drawBehind { drawLine(Color.Black, Offset.Zero, Offset((x1 - x0).toPx(), (y1 - y0).toPx()), 1f) }
+                    .drawBehind { drawLine(Color.Black, Offset.Zero, Offset((x1 - x0).toPx(), (y1 - y0).toPx()), 4f) }
+            )
+        }
+    } else {
+        Box(modifier = Modifier.offset(x0 + (1.82*25).dp, y0 + ((1.82*25).dp))) {
+            Box(
+                modifier = Modifier.size(x1 - x0, y1 - y0)
+                    .drawBehind { drawLine(Color.Black, Offset.Zero, Offset((x1 - x0).toPx(), (y1 - y0).toPx()), 4f) }
             )
         }
     }
@@ -136,13 +145,6 @@ fun printNode(node: BSNode<Int, String>, difColour: Boolean = false) {
                 .requiredSize(54.dp)
                 .clip(CircleShape)
                 .background(color)
-                .pointerInput(x, y) {
-                    detectDragGestures { change, dragAmount ->
-                        change.consume()
-                        x.value += dragAmount.x.toDp()
-                        y.value += dragAmount.y.toDp()
-                    }
-                }
                 .onPointerEvent(eventType = PointerEventType.Release) {
                     node.value = settingValue(node.value, x.value.value, y.value.value, p2, true)
                 },

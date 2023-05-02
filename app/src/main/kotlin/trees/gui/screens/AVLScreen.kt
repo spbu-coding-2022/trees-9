@@ -36,7 +36,7 @@ fun AVLScreen(toMenu: () -> Unit) {
             horizontalAlignment = Alignment.Start,
         ) {
             Column(
-                Modifier.width(200.dp).height(260.dp).offset(0.dp, 0.dp),
+                Modifier.width(200.dp).height(300.dp).offset(0.dp, 0.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {

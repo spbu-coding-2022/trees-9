@@ -1,5 +1,11 @@
 package trees.gui.screens
 
+import androidx.compose.foundation.border
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.TextField
+import androidx.compose.ui.draw.clip
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -11,7 +17,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -20,7 +25,34 @@ import trees.dataBases.BST.insertAllNodesToTree
 import trees.dataBases.BST.removeFile
 import trees.dataBases.BST.writeAllNodesToFile
 import trees.gui.*
+import trees.gui.printNode
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.layout
+import androidx.compose.ui.modifier.modifierLocalMapOf
+import trees.gui.printLine
 import trees.nodes.BSNode
+
+fun getX(node: BSNode<Int, String>): Float {
+    return node.value.split(";")[0].toFloat()
+}
+
+fun getY(node: BSNode<Int, String>): Float {
+    return node.value.split(";")[1].toFloat()
+}
+
+fun newXY(node: BSNode<Int, String>, x: Float, y: Float) {
+    var count = 0
+    var value = ""
+    for(i in 0..node.value.length - 1) {
+        if (node.value[i] == ';') {
+            count++
+        }
+        if (count == 2) {
+            value += node.value[i]
+        }
+    }
+    node.value = x.toString() + ";" + y.toString() + ";" + value
+}
 
 var treeInit = false
 var findMode = false
@@ -31,6 +63,8 @@ var enteredKey: String = ""
 @Preview
 @Composable
 fun BSTScreen(toMenu: () -> Unit) {
+//    val tree = insertAllNodesToTree()
+//    drawTree(tree.root, null, 70)
     val tree = remember { mutableStateOf(BSTree<Int, String>()) }
     var textMessage by remember { mutableStateOf(mutableListOf<String>()) }
     var screenReload by remember { mutableStateOf(false) }
@@ -61,7 +95,11 @@ fun BSTScreen(toMenu: () -> Unit) {
             val parent = tree.value.root?.let { it1 -> getParent(it.key, it1) }
             parent?.let { it1 ->
                 if (tree.value.root != it) {
-                    printLine(it1, it)
+                    if(it1.left == it) {
+                        printLine(it1, it, true)
+                    } else {
+                        printLine(it1, it, false)
+                    }
                 }
             }
         }
