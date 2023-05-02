@@ -13,6 +13,7 @@ import trees.gui.screens.AVLScreen
 import trees.gui.screens.BSTScreen
 import trees.gui.screens.RBScreen
 import trees.gui.screens.homeScreen
+import java.awt.Dimension
 
 fun main() = application {
     Window(
@@ -20,6 +21,8 @@ fun main() = application {
         title = "Trees by ",
         state = rememberWindowState(width = 1920.dp, height = 1080.dp)
     ) {
+        window.minimumSize = Dimension(1600, 900)
+        window.maximumSize = Dimension(1600, 900)
         var screenState by remember { mutableStateOf<Screen>(Screen.homeScreen) }
         when (val screen = screenState) {
             is Screen.homeScreen ->
@@ -29,13 +32,13 @@ fun main() = application {
                     toRB = { screenState = Screen.RBScreen })
 
             is Screen.BSTScreen ->
-                BSTScreen(toMenu = { screenState = Screen.homeScreen })
+                BSTScreen(toMenu = { screenState = Screen.homeScreen})
 
             is Screen.AVLScreen ->
-                AVLScreen(toMenu = { screenState = Screen.homeScreen })
+                AVLScreen(toMenu = { screenState = Screen.homeScreen})
 
             is Screen.RBScreen ->
-                RBScreen(toMenu = { screenState = Screen.homeScreen })
+                RBScreen(toMenu = { screenState = Screen.homeScreen})
         }
     }
 }
