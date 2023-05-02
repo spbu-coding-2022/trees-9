@@ -63,8 +63,6 @@ var enteredKey: String = ""
 @Preview
 @Composable
 fun BSTScreen(toMenu: () -> Unit) {
-//    val tree = insertAllNodesToTree()
-//    drawTree(tree.root, null, 70)
     val tree = remember { mutableStateOf(BSTree<Int, String>()) }
     var textMessage by remember { mutableStateOf(mutableListOf<String>()) }
     var screenReload by remember { mutableStateOf(false) }
