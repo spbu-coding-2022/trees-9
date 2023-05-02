@@ -71,6 +71,11 @@ import trees.nodes.BSNode
 //     }
 // }
 
+var treeInit = false
+var findMode = false
+var enteredValue: String = ""
+var enteredKey: String = ""
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
