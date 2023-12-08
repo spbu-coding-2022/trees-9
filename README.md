@@ -1,5 +1,7 @@
 # Trees by team 9
 A project created to study the mechanics of AVL, Red-Black and BST trees, unit tests, databases and graphic user interface
+![image](https://github.com/spbu-coding-2022/trees-9/assets/111463436/930cd060-9e55-42db-9967-cf8ff1e3081b)
+
 
 ## Navigation
 
@@ -12,11 +14,15 @@ A project created to study the mechanics of AVL, Red-Black and BST trees, unit t
 ## Download and build:
 Possible way to clone project by SSH key in command line:
 
-        git clone git@github.com:spbu-coding-2022/trees-9.git
+    git clone git@github.com:spbu-coding-2022/trees-9.git
     
 You may build it by [gradle](https://gradle.org/):
 
-        ./gradlew build
+    ./gradlew build
+
+To run app:
+
+    ./gradlew run
 
 *Aware : build method depends on operating system*
 ## Trees
@@ -36,15 +42,8 @@ Tests aimed at checking different cases:
 
 For all trees, the corresponding validator is implemented
 
-Test coverage by Intellej IDEA:
-| Tree    | Methods %  | Lines % |
-| ------------------- |:---:|:--:|
-| Binary search tree  | 100 | 96 |
-| AVL tree            | 100 | 98 |
-| Reb-Black tree      | 100 | 93 |
-
 ## Databases
-Databases created to store tree nodes
+3 different ways to store trees: SQLite, Neo4j and .csv files
 
 Capability:
 - Insert all nodes to tree
